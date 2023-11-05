@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
         if (floatingJoystick.Vertical != 0 || floatingJoystick.Horizontal != 0)
         {
             Vector3 direction = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical).normalized;
+
+            // Movement
             Vector3 desiredVelocity = direction * speed;
             rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
+            // Rotation
             Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-
             rb.MoveRotation(targetRotation);
         }
         else
