@@ -2431,7 +2431,7 @@ MonoBehaviour:
   floatingJoystick: {fileID: 1187457302}
   rb: {fileID: 1627479788}
   isRanged: 0
-  range: 3.56
+  range: 2
   attackSpeed: 0.55
   isAttacking: 0
   attackingObject: {fileID: 0}
