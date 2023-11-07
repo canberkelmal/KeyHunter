@@ -70,6 +70,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision != null && collision.gameObject.CompareTag("Attackable"))
+        {
+            if (collision.gameObject.GetComponent<ObjSc>())
+            {
+                collision.gameObject.GetComponent<ObjSc>().Attacked();
+            }
+        }
+    }
 
     // Check for any attackable around
     bool CheckAround()
@@ -118,10 +128,7 @@ public class PlayerController : MonoBehaviour
             attackTimer = attackSpeed;
 
             // For development process
-            if (attackingObject.GetComponent<ObjSc>())
-            {
-                attackingObject.GetComponent<ObjSc>().Attacked();
-            }
+            transform.GetChild(0).GetComponent<Animator>().SetTrigger("Slash");
 
             // Attack from distance
             if (isRanged)
@@ -134,6 +141,14 @@ public class PlayerController : MonoBehaviour
 
             }
 
+        }
+    }
+
+    public void HitToEnemy()
+    {
+        if (attackingObject.GetComponent<EnemySc>())
+        {
+            attackingObject.GetComponent<EnemySc>().Attacked();
         }
     }
 

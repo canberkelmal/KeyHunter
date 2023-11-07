@@ -5,17 +5,15 @@ using UnityEngine;
 public class ObjSc : MonoBehaviour
 {
     GameManager gameManager;
-    LayerMask defLayerMask;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        defLayerMask = gameManager.defaultLayerMask;
     }
 
     public void Attacked()
     {
-        gameObject.layer = defLayerMask;
+        gameObject.tag = "Untagged";
         GetComponent<Renderer>().material = gameManager.attackedMat;
     }
 }
