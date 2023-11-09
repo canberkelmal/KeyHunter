@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     public Material attackedMat;
     public List<Weapon> weapons;
 
+    private void Start()
+    {
+        SetWeapon();
+    }
 
     private void Update()
     {
@@ -26,8 +30,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void SetWeapon(string weaponName)
+    public void SetWeaponPref(string weaponName)
     {
+        PlayerPrefs.SetString("WeaponName", weaponName);
+        SetWeapon();
+    }
+
+    public void SetWeapon()
+    {
+        string weaponName = PlayerPrefs.GetString("WeaponName", "Blade");
         PlayerController playerSc = player.GetComponent<PlayerController>();
 
         // Remove current weapon from player
@@ -50,5 +61,7 @@ public class GameManager : MonoBehaviour
         GameObject weaponObject = Instantiate(selectedWeapon.prefab, playerSc.weaponPoint.transform);
         playerSc.attackRange = selectedWeapon.range;
         playerSc.isRanged = selectedWeapon.ranged;
+        playerSc.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
+        player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;
     }
 }

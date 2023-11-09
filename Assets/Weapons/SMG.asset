@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2526e507d0a85d489904c5803532030, type: 3}
-  m_Name: Blade
+  m_Name: SMG
   m_EditorClassIdentifier: 
-  weaponName: Blade
-  prefab: {fileID: 7166648791074488584, guid: e84878d084e913047a752161100e65cf, type: 3}
-  bullet: {fileID: 0}
-  animator: {fileID: 9100000, guid: 7043160fd8209e44099fc7e78c6241de, type: 2}
+  weaponName: SMG
+  prefab: {fileID: 1020708003850551593, guid: f60cabede230e4545b5e9214ff7a8c9f, type: 3}
+  bullet: {fileID: 6045650574367967447, guid: 1391a63de7423ea469d44960c0232007, type: 3}
+  animator: {fileID: 9100000, guid: 2b6e576dc43c5f542aedd4a531671658, type: 2}
   icon: {fileID: 0}
-  ranged: 0
-  range: 1.5
+  ranged: 1
+  range: 5

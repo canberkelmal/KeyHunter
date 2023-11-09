@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public FloatingJoystick floatingJoystick;
     public Rigidbody rb;
     public Transform weaponPoint;
+    public GameObject bullet;
 
     public bool isRanged = false;
     public float nearAttackRange = 1.5f;
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
                 rb.MoveRotation(Quaternion.Euler(0, targetRotation.eulerAngles.y, 0));
 
                 // Movement
-                Vector3 desiredVelocity = transform.forward * speed;
+                Vector3 desiredVelocity = transform.forward * speed / 2;
                 rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
                 AttackToNearest();
@@ -135,19 +136,16 @@ public class PlayerController : MonoBehaviour
             attackTimer = attackSpeed;
 
             // For development process
-            transform.GetChild(0).GetComponent<Animator>().SetTrigger("Slash");
-
-            // Attack from distance
-            if (isRanged)
-            {
-
-            }
-            // Attack up close
-            else
-            {
-
-            }
+            transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
         }
+    }
+
+    public void ThrowABullet()
+    {
+        Vector3 spawnPoint = (Vector3)(transform.GetComponentsInChildren<Transform>()
+                            .FirstOrDefault(c => c.gameObject.name == "WeoponPoint")?.position) - Vector3.up/2;
+        GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
+        throwedBullet.GetComponent<BulletSc>().target = attackingObject.transform;
     }
 
     public void HitToEnemy()

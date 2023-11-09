@@ -10,8 +10,11 @@ public class Weapon : ScriptableObject
     public GameObject prefab;
     public GameObject bullet;
 
+    public RuntimeAnimatorController animator;
+
     public Sprite icon;
 
     public bool ranged;
+
     public float range;
 }
