@@ -11,12 +11,15 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public FloatingJoystick floatingJoystick;
     public Rigidbody rb;
+    public Transform weaponPoint;
 
     public bool isRanged = false;
-    public float range = 1f;
+    public float nearAttackRange = 1.5f;
+    public float attackRange = 1.5f;
     // Delta t between attacks
     public float attackSpeed = 1f;
     public bool isAttacking = false;
+
     public GameObject attackingObject;
 
     LayerMask attackableLayerMask, blockAttackLayerMask;
@@ -37,23 +40,27 @@ public class PlayerController : MonoBehaviour
         {
             isMoving = true;
             transform.GetChild(0).GetComponent<Animator>().SetBool("Walking",true);
-            //CheckAround();
             Vector3 direction = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical).normalized;
 
-            // Movement
-            Vector3 desiredVelocity = direction * speed;
-            rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
             // Rotation
             if (!CheckAround())
             {
                 Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 rb.MoveRotation(targetRotation);
+
+                // Movement
+                Vector3 desiredVelocity = direction * speed;
+                rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
             }
             else
             {
                 Quaternion targetRotation = Quaternion.LookRotation(new Vector3(attackingObject.transform.position.x, rb.transform.position.y, attackingObject.transform.position.z) - rb.transform.position, Vector3.up);
                 rb.MoveRotation(Quaternion.Euler(0, targetRotation.eulerAngles.y, 0));
+
+                // Movement
+                Vector3 desiredVelocity = transform.forward * speed;
+                rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
                 AttackToNearest();
             }
@@ -84,7 +91,7 @@ public class PlayerController : MonoBehaviour
     // Check for any attackable around
     bool CheckAround()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, attackableLayerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange, attackableLayerMask);
         List<Collider> collidersToRemove = new List<Collider>();
 
         foreach (Collider collider in hitColliders)
@@ -140,7 +147,6 @@ public class PlayerController : MonoBehaviour
             {
 
             }
-
         }
     }
 
@@ -157,10 +163,16 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Attack stopped");
     }
 
+    public void SetRange(bool ranged, float range)
+    {
+        isRanged = ranged;
+        attackRange = ranged ? range : nearAttackRange;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = UnityEngine.Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
  
