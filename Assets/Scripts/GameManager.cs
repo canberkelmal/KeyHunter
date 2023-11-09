@@ -7,13 +7,14 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject player;
-    public LayerMask attackableLayerMask, defaultLayerMask, blockAttackLayerMask;
+    public LayerMask attackableLayerMask, defaultLayerMask, blockAttackLayerMask, deathLayerMask;
     public Material attackedMat;
     public List<Weapon> weapons;
 
     private void Start()
     {
         SetWeapon();
+        deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
     }
 
     private void Update()

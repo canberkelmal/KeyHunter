@@ -5,17 +5,16 @@ using UnityEngine;
 public class EnemySc : MonoBehaviour
 {
     GameManager gameManager;
-    LayerMask defLayerMask;
+    LayerMask deathLayerMask;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        defLayerMask = gameManager.defaultLayerMask;
     }
 
-    public void Attacked()
+    public void Attacked() 
     {
-        gameObject.layer = defLayerMask;
         GetComponent<Renderer>().material = gameManager.attackedMat;
+        GetComponent<Rigidbody>().isKinematic = true;
     }
 }

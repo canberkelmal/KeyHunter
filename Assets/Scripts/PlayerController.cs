@@ -137,13 +137,18 @@ public class PlayerController : MonoBehaviour
 
             // For development process
             transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+
+            if(!isRanged)
+            {
+                weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = true;
+            }
         }
     }
 
     public void ThrowABullet()
     {
-        Vector3 spawnPoint = (Vector3)(transform.GetComponentsInChildren<Transform>()
-                            .FirstOrDefault(c => c.gameObject.name == "WeoponPoint")?.position) - Vector3.up/2;
+        attackingObject.layer = gameManager.deathLayerMask;
+        Vector3 spawnPoint = weaponPoint.position - Vector3.up/2;
         GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
         throwedBullet.GetComponent<BulletSc>().target = attackingObject.transform;
     }
@@ -159,6 +164,10 @@ public class PlayerController : MonoBehaviour
     void StopAttacking()
     {
         Debug.Log("Attack stopped");
+        if (!isRanged)
+        {
+            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = false;
+        }
     }
 
     public void SetRange(bool ranged, float range)
