@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SMG
   m_EditorClassIdentifier: 
   weaponName: SMG
-  prefab: {fileID: 1020708003850551593, guid: f60cabede230e4545b5e9214ff7a8c9f, type: 3}
+  prefab: {fileID: 7424649712512730539, guid: 8d67f26a214d8ee48bd96320be018ab3, type: 3}
   bullet: {fileID: 6045650574367967447, guid: 1391a63de7423ea469d44960c0232007, type: 3}
   animator: {fileID: 9100000, guid: 2b6e576dc43c5f542aedd4a531671658, type: 2}
   icon: {fileID: 0}

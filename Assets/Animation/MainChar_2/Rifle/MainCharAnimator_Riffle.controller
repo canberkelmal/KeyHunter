@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2bccff8aa22d6e54288aee97edd6b7b5, type: 2}
+  m_Motion: {fileID: 7400000, guid: 194f62c003911f7498a826234d0654ac, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -58,7 +58,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MainCharAnimator_Blade
+  m_Name: MainCharAnimator_Riffle
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Walking
@@ -133,7 +133,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e1f9cd9441425a6448dc9cc12eee7ce8, type: 2}
+  m_Motion: {fileID: 7400000, guid: e9b453d1040e58c46932923b16187747, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -171,7 +171,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerIdleBlade
+  m_Name: PlayerIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -185,7 +185,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: bea84d3e1e4d86e4d8535bd945109fb3, type: 2}
+  m_Motion: {fileID: 7400000, guid: 8c59fbb92158f594f97da4cdb52dd473, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

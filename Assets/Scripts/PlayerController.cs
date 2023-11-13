@@ -155,6 +155,7 @@ public class PlayerController : MonoBehaviour
 
     public void HitToEnemy()
     {
+        attackingObject.layer = gameManager.deathLayerMask;
         if (attackingObject.GetComponent<EnemySc>())
         {
             attackingObject.GetComponent<EnemySc>().Attacked();
