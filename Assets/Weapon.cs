@@ -17,4 +17,5 @@ public class Weapon : ScriptableObject
     public bool ranged;
 
     public float range;
+    public float weaponSpeed;
 }

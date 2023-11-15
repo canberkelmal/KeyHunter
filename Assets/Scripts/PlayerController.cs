@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     // Delta t between attacks
     public float attackSpeed = 1f;
     public bool isAttacking = false;
+    public bool attackAnim = false;
 
     public GameObject attackingObject;
 
@@ -49,6 +50,27 @@ public class PlayerController : MonoBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 rb.MoveRotation(targetRotation);
+            }
+            else
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(new Vector3(attackingObject.transform.position.x, rb.transform.position.y, attackingObject.transform.position.z) - rb.transform.position, Vector3.up);
+                rb.MoveRotation(Quaternion.Euler(0, targetRotation.eulerAngles.y, 0));
+                if (!attackAnim)
+                {
+                    attackAnim = true;
+                    AttackToNearest();
+                }
+            }
+
+            // Movement
+            Vector3 desiredVelocity = direction * speed;
+            rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
+
+            /*// Rotation
+            if (!CheckAround())
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+                rb.MoveRotation(targetRotation);
 
                 // Movement
                 Vector3 desiredVelocity = direction * speed;
@@ -64,7 +86,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
                 AttackToNearest();
-            }
+            }*/
         }
         else if(isMoving)
         {
@@ -74,7 +96,10 @@ public class PlayerController : MonoBehaviour
             if(isAttacking) 
             {
                 isAttacking = false;
-                StopAttacking();
+                if(!isRanged)
+                {
+                    //StopAttacking();
+                }
             }
         }
     }
@@ -112,7 +137,7 @@ public class PlayerController : MonoBehaviour
         {
             hitColliders = hitColliders.OrderBy(collider => Vector3.Distance(transform.position, collider.transform.position)).ToArray();
             GameObject nearestObject = hitColliders[0].gameObject;
-
+             
             if (attackingObject != nearestObject)
             {
                 attackingObject = nearestObject;
@@ -122,13 +147,35 @@ public class PlayerController : MonoBehaviour
         else if(isAttacking)
         {
             isAttacking = false;
-            StopAttacking();
+            //StopAttacking();
             attackingObject = null;
         }
         return isAttacking;
     }
+    public void AttackToNearest()
+    {
+        // For development process
+        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+        transform.GetChild(0).GetComponent<Animator>().speed = attackSpeed;
 
-    void AttackToNearest()
+        if (!isRanged)
+        {
+            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = true;
+        }
+    }
+
+    public void AttackAnimFinished()
+    {
+        attackAnim = false; 
+
+        transform.GetChild(0).GetComponent<Animator>().speed = 1;
+
+        if (!isRanged)
+        {
+            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = false;
+        }
+    }
+    /*void AttackToNearest()
     {
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0)
@@ -137,17 +184,18 @@ public class PlayerController : MonoBehaviour
 
             // For development process
             transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+            transform.GetChild(0).GetComponent<Animator>().speed =
 
-            if(!isRanged)
+            if (!isRanged)
             {
                 weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = true;
             }
         }
-    }
+    }*/
 
     public void ThrowABullet()
     {
-        attackingObject.layer = gameManager.deathLayerMask;
+        attackingObject.layer = gameManager.defaultLayerMask;
         Vector3 spawnPoint = weaponPoint.position - Vector3.up/2;
         GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
         throwedBullet.GetComponent<BulletSc>().target = attackingObject.transform;
@@ -160,6 +208,7 @@ public class PlayerController : MonoBehaviour
         {
             attackingObject.GetComponent<EnemySc>().Attacked();
         }
+        AttackAnimFinished();
     }
 
     void StopAttacking()

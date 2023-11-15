@@ -13,11 +13,17 @@ public class ModelSc : MonoBehaviour
 
     public void TouchToEnemy()
     {
-        transform.parent.GetComponent<PlayerController>().HitToEnemy();
+        player.GetComponent<PlayerController>().HitToEnemy();
     }
 
     public void ThrowBullet()
     {
         player.GetComponent<PlayerController>().ThrowABullet();
+    }
+
+    public void AttackAnimFinished() 
+    {
+        Debug.Log("AttackAnimFinished from model");
+        player.GetComponent<PlayerController>().AttackAnimFinished();
     }
 }

@@ -10,11 +10,13 @@ public class GameManager : MonoBehaviour
     public LayerMask attackableLayerMask, defaultLayerMask, blockAttackLayerMask, deathLayerMask;
     public Material attackedMat;
     public List<Weapon> weapons;
+    public float baseAttackSpeed = 1f;
 
     private void Start()
     {
         SetWeapon();
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
+        defaultLayerMask = LayerMask.NameToLayer("Default");
     }
 
     private void Update()
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
 
     public void SetWeaponPref(string weaponName)
     {
-        PlayerPrefs.SetString("WeaponName", weaponName);
+        PlayerPrefs.SetString("WeaponName", weaponName); 
         SetWeapon();
     }
 
@@ -63,6 +65,7 @@ public class GameManager : MonoBehaviour
         playerSc.attackRange = selectedWeapon.range;
         playerSc.isRanged = selectedWeapon.ranged;
         playerSc.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
-        player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;
+        playerSc.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
+        player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;        
     }
 }
