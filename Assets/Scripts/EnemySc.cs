@@ -14,8 +14,10 @@ public class EnemySc : MonoBehaviour
 
     public void Attacked() 
     {
+        Destroy(gameObject);
+        /*
         GetComponent<Renderer>().material = gameManager.attackedMat;
         GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.layer = gameManager.deathLayerMask;
+        gameObject.layer = gameManager.deathLayerMask;*/
     }
 }

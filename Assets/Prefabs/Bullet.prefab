@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 25
+  throwed: 0
   target: {fileID: 0}
 --- !u!96 &481484534082411649
 TrailRenderer:

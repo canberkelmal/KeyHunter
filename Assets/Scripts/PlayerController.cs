@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
     public GameObject attackingObject;
 
     LayerMask attackableLayerMask, blockAttackLayerMask;
-    float attackTimer = 0f;
     GameManager gameManager;
     bool isMoving = false;
 
@@ -63,7 +62,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Movement
-            Vector3 desiredVelocity = direction * speed;
+            Vector3 desiredVelocity = attackingObject != null ? direction * speed / 2 : direction * speed;
             rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
             /*// Rotation
@@ -90,16 +89,12 @@ public class PlayerController : MonoBehaviour
         }
         else if(isMoving)
         {
-            transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
             isMoving = false;
+            transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
             rb.velocity = Vector3.zero;
             if(isAttacking) 
             {
                 isAttacking = false;
-                if(!isRanged)
-                {
-                    //StopAttacking();
-                }
             }
         }
     }
@@ -147,7 +142,6 @@ public class PlayerController : MonoBehaviour
         else if(isAttacking)
         {
             isAttacking = false;
-            //StopAttacking();
             attackingObject = null;
         }
         return isAttacking;
@@ -172,11 +166,11 @@ public class PlayerController : MonoBehaviour
 
         if (!isRanged)
         {
-            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = false;
+            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = false; 
         }
     }
     /*void AttackToNearest()
-    {
+    { 
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0)
         {
@@ -195,10 +189,13 @@ public class PlayerController : MonoBehaviour
 
     public void ThrowABullet()
     {
-        attackingObject.layer = gameManager.defaultLayerMask;
-        Vector3 spawnPoint = weaponPoint.position - Vector3.up/2;
-        GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
-        throwedBullet.GetComponent<BulletSc>().target = attackingObject.transform;
+        if(attackingObject != null)
+        {
+            attackingObject.layer = gameManager.defaultLayerMask;
+            Vector3 spawnPoint = weaponPoint.position - Vector3.up / 2;
+            GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
+            throwedBullet.GetComponent<BulletSc>().Init(attackingObject.transform);
+        }
     }
 
     public void HitToEnemy()
@@ -209,15 +206,6 @@ public class PlayerController : MonoBehaviour
             attackingObject.GetComponent<EnemySc>().Attacked();
         }
         AttackAnimFinished();
-    }
-
-    void StopAttacking()
-    {
-        Debug.Log("Attack stopped");
-        if (!isRanged)
-        {
-            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = false;
-        }
     }
 
     public void SetRange(bool ranged, float range)
