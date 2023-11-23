@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     public Transform weaponPoint;
     public GameObject bullet;
+    public GameObject rangeCircleImage;
 
     public bool isRanged = false;
     public float nearAttackRange = 1.5f;
@@ -98,16 +99,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision != null && collision.gameObject.CompareTag("Attackable"))
-        {
-            if (collision.gameObject.GetComponent<ObjSc>())
-            {
-                collision.gameObject.GetComponent<ObjSc>().Attacked();
-            }
-        }
-    }
+
+
 
     // Check for any attackable around
     bool CheckAround()

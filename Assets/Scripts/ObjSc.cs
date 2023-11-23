@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class ObjSc : MonoBehaviour
 {
+    bool isAttacked = false;
+
     GameManager gameManager;
     public float throwUpForce = 1;
+
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player") && !isAttacked)
+        {
+            Attacked();
+        }
+    }
 
     public void Attacked()
     {
-        gameObject.tag = "Untagged";
+        isAttacked = true;
 
         transform.GetChild(0).gameObject.SetActive(false);
         transform.GetChild(1).gameObject.SetActive(true);
@@ -23,8 +33,14 @@ public class ObjSc : MonoBehaviour
         {
             boxPart.GetComponent<Rigidbody>().AddForce(Vector3.up * throwUpForce, ForceMode.Impulse);
         }
+        DropObject();
+        Destroy(gameObject, 2f);
+    }
 
-        Destroy(gameObject, 3f);
-        //GetComponent<Renderer>().material = gameManager.attackedMat;
+    public void DropObject()
+    {
+        GameObject obj = Random.Range(0, 2) > 0 ? gameManager.collectables[0] : gameManager.collectables[1];
+
+        Instantiate(obj, transform.position, Quaternion.identity);
     }
 }

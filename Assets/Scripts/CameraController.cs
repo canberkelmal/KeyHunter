@@ -6,10 +6,11 @@ public class CameraController : MonoBehaviour
 {
     public Transform player;
 
-    Vector3 cameraOffset = Vector3.zero;
+    public Vector3 cameraOffset = Vector3.zero;
 
-    // Start is called before the first frame update
-    void Start()
+    
+
+    public void SetPlayerOffset()
     {
         cameraOffset = transform.position - player.position;
     }
