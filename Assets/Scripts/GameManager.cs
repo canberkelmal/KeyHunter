@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public LayerMask attackableLayerMask, defaultLayerMask, blockAttackLayerMask, deathLayerMask;
     public Material attackedMat;
     public List<Weapon> weapons;
+    public List<Buff> buffs;
     public List<GameObject> collectables;
     public float baseAttackSpeed = 1f;
     public Text coinText, crossText;
@@ -19,31 +20,38 @@ public class GameManager : MonoBehaviour
     public int crossAmount = 0;
     public float dropHeight = 0.5f;
     public GameObject[] levelPrefabs;
+    public GameObject levelBuffUI;
     int currentLevel, currentStage;
+    Weapon selectedWeapon;
 
     private void Start()
     {
-        InitLevel(currentLevel, currentStage);
-        SetWeapon();
+        InitLevel();
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
         defaultLayerMask = LayerMask.NameToLayer("Default");
-        SetCoinAmount(0); 
-        SetCrossAmount(0);
     }
 
-    void InitLevel(int level, int stage)
+    void InitLevel()
     {
+        // Load level
         currentLevel = PlayerPrefs.GetInt("level", 0);
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
-
+        
         foreach (Transform clv in levelsParent.transform)
         {
             Destroy(clv.gameObject);
         }
 
-        GameObject levelPrefab = levelPrefabs[level].transform.GetChild(stage).gameObject; 
+        GameObject levelPrefab = levelPrefabs[currentLevel].transform.GetChild(currentStage).gameObject; 
         GameObject spawnedLevel = Instantiate(levelPrefab, levelsParent);
+
+        // Set player position and weapon
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
+        SetWeapon();
+
+        // Set UI elements
+        SetCoinAmount(0);
+        SetCrossAmount(0);
     }
 
     private void Update()
@@ -77,15 +85,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Find the desired weapon
-        string weaponName = PlayerPrefs.GetString("WeaponName", "Blade");
-        Weapon selectedWeapon = null;
-        foreach (var weapon in weapons)
-        {
-            if(weapon.name == weaponName)
-            {
-                selectedWeapon = weapon;
-            }
-        }
+        selectedWeapon = GetWeapon(PlayerPrefs.GetString("WeaponName", "Blade"));
 
         // Set the desired weapon
         GameObject weaponObject = Instantiate(selectedWeapon.prefab, playerSc.weaponPoint.transform);
@@ -95,6 +95,19 @@ public class GameManager : MonoBehaviour
         playerSc.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
         playerSc.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
         player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;        
+    }
+
+    public Weapon GetWeapon(string weaponName)
+    {
+        Weapon retWeapon = null;
+        foreach (var weapon in weapons)
+        {
+            if (weapon.name == weaponName)
+            {
+                retWeapon = weapon;
+            }
+        }
+        return retWeapon;
     }
 
     public void SetCoinAmount(int addAmount)
@@ -107,12 +120,61 @@ public class GameManager : MonoBehaviour
 
     public void SetCrossAmount(int addAmount)
     {
-        crossAmount = PlayerPrefs.GetInt("CrossAmount", 0);
+        crossAmount = PlayerPrefs.GetInt("CrossAmount", 0); 
         crossAmount += addAmount;
         PlayerPrefs.SetInt("CrossAmount", crossAmount);
         crossText.text = crossAmount.ToString();
     }
-    public void SetBuff()
+    public void SetBuff(Buff buff1, Buff buff2)
+    {
+        PlayerController playerSc = player.GetComponent<PlayerController>();
+        playerSc.SetController(false);
+
+        levelBuffUI.transform.Find("Buff1").Find("UISprite").GetComponent<Image>().sprite = buff1.uISprite;
+        levelBuffUI.transform.Find("Buff1").Find("Title").GetComponent<Text>().text = buff1.buffName;
+
+        levelBuffUI.transform.Find("Buff2").Find("UISprite").GetComponent<Image>().sprite = buff2.uISprite;
+        levelBuffUI.transform.Find("Buff2").Find("Title").GetComponent<Text>().text = buff2.buffName;
+
+        levelBuffUI.SetActive(true);
+    }
+
+    public void Buff1Button()
+    {
+        CloseBuffPanel();
+    }
+    public void Buff2Button()
+    {
+        CloseBuffPanel();
+    }
+
+    public void CloseBuffPanel()
+    {
+        levelBuffUI.SetActive(false);
+        PlayerController playerSc = player.GetComponent<PlayerController>();
+        playerSc.SetController(true);
+    }
+
+    public void NextStage()
+    {
+        // If all level stages have not been finished.
+        if (currentStage < levelPrefabs[currentLevel].transform.childCount - 2)
+        {
+            currentStage++;
+            PlayerPrefs.SetInt("levelStage", currentStage);
+        }
+        // Go next level, first stage.
+        else
+        {
+            ClearLevelBuffs();
+            currentLevel++;
+            currentStage = 0;
+            PlayerPrefs.SetInt("level", currentLevel);
+            PlayerPrefs.SetInt("levelStage", currentStage);
+        }
+    }
+
+    public void ClearLevelBuffs()
     {
 
     }

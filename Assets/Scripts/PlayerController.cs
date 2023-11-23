@@ -23,11 +23,14 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking = false;
     public bool attackAnim = false;
 
+
     public GameObject attackingObject;
+
 
     LayerMask attackableLayerMask, blockAttackLayerMask;
     GameManager gameManager;
     bool isMoving = false;
+    bool playerController = true;
 
     private void Start()
     {
@@ -38,12 +41,11 @@ public class PlayerController : MonoBehaviour
     public void FixedUpdate()
     {    
         // Movement and rotation
-        if (floatingJoystick.Vertical != 0 || floatingJoystick.Horizontal != 0)
+        if ((floatingJoystick.Vertical != 0 || floatingJoystick.Horizontal != 0) && playerController)
         {
             isMoving = true;
             transform.GetChild(0).GetComponent<Animator>().SetBool("Walking",true);
             Vector3 direction = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical).normalized;
-
 
             // Rotation
             if (!CheckAround())
@@ -98,6 +100,11 @@ public class PlayerController : MonoBehaviour
                 isAttacking = false;
             }
         }
+    }
+
+    public void SetController(bool cntrl)
+    {
+        playerController = cntrl;
     }
 
 
