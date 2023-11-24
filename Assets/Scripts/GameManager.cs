@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -21,8 +22,12 @@ public class GameManager : MonoBehaviour
     public float dropHeight = 0.5f;
     public GameObject[] levelPrefabs;
     public GameObject levelBuffUI;
+    public float UIFadeTime = 0.7f;
+
+
     int currentLevel, currentStage;
     Weapon selectedWeapon;
+    Buff buffUI1, buffUI2;
 
     private void Start()
     {
@@ -127,6 +132,9 @@ public class GameManager : MonoBehaviour
     }
     public void SetBuff(Buff buff1, Buff buff2)
     {
+        buffUI1 = buff1;
+        buffUI2 = buff2;
+
         PlayerController playerSc = player.GetComponent<PlayerController>();
         playerSc.SetController(false);
 
@@ -136,19 +144,34 @@ public class GameManager : MonoBehaviour
         levelBuffUI.transform.Find("Buff2").Find("UISprite").GetComponent<Image>().sprite = buff2.uISprite;
         levelBuffUI.transform.Find("Buff2").Find("Title").GetComponent<Text>().text = buff2.buffName;
 
+        // Panel fade in
+        levelBuffUI.GetComponent<CanvasGroup>().alpha = 0f;
+        levelBuffUI.GetComponent<RectTransform>().transform.localPosition = Vector3.up * 250;
         levelBuffUI.SetActive(true);
+        levelBuffUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 0f), UIFadeTime, false).SetEase(Ease.OutElastic);
+        levelBuffUI.GetComponent<CanvasGroup>().DOFade(1,UIFadeTime/2);
     }
 
     public void Buff1Button()
     {
+        buffUI1.BuffEffect();
         CloseBuffPanel();
     }
     public void Buff2Button()
     {
+        buffUI2.BuffEffect();
         CloseBuffPanel();
     }
 
     public void CloseBuffPanel()
+    {
+        levelBuffUI.GetComponent<CanvasGroup>().alpha = 1f;
+        levelBuffUI.GetComponent<RectTransform>().transform.localPosition = Vector3.zero;
+        levelBuffUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 250f), UIFadeTime, false).SetEase(Ease.InOutQuint).OnComplete(BuffPanelFadedOuted);
+        levelBuffUI.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime);
+    }
+
+    public void BuffPanelFadedOuted()
     {
         levelBuffUI.SetActive(false);
         PlayerController playerSc = player.GetComponent<PlayerController>();
