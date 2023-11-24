@@ -178,8 +178,14 @@ public class GameManager : MonoBehaviour
         playerSc.SetController(true);
     }
 
+
+
     public void NextStage()
     {
+        if(levelPrefabs.Length > 0)
+        {
+
+        }
         // If all level stages have not been finished.
         if (currentStage < levelPrefabs[currentLevel].transform.childCount - 2)
         {
