@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int coinAmount = 0;
     public int crossAmount = 0;
     public float dropHeight = 0.5f;
+    public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject levelBuffUI;
     public float UIFadeTime = 0.7f;
@@ -31,12 +32,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InitLevel();
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
         defaultLayerMask = LayerMask.NameToLayer("Default");
     }
 
-    void InitLevel()
+    public void InitLevel()
     {
         // Load level
         currentLevel = PlayerPrefs.GetInt("level", 0);
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
             Destroy(clv.gameObject);
         }
 
-        GameObject levelPrefab = levelPrefabs[currentLevel].transform.GetChild(currentStage).gameObject; 
+        GameObject levelPrefab = levels[currentLevel].levelPrefab.transform.GetChild(currentStage).gameObject; 
         GameObject spawnedLevel = Instantiate(levelPrefab, levelsParent);
 
         // Set player position and weapon
@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
 
         }
         // If all level stages have not been finished.
-        if (currentStage < levelPrefabs[currentLevel].transform.childCount - 2)
+        if (currentStage < levels[currentLevel].stageCount - 2)
         {
             currentStage++;
             PlayerPrefs.SetInt("levelStage", currentStage);
