@@ -178,8 +178,8 @@ public class GameManager : MonoBehaviour
         playerSc.SetController(true);
     }
 
-
-
+     
+     
     public void NextStage()
     {
         if(levelPrefabs.Length > 0)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ed0292f16b3a074e8f8630952a04771, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  levelName: SKELETON TEMPLE
+  levelName: SKELETON RUIN
   bgPrefab: {fileID: 3423984423630502218, guid: e592ca666c5c8774d92a9ad1694b282b, type: 3}
   stageCount: 20
   levelPrefab: {fileID: 6682158605550240210, guid: 65ff89d5e6a0aff4886527e89ed67b04, type: 3}
