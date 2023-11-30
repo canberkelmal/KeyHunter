@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public float dropHeight = 0.5f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
-    public GameObject levelBuffUI;
+    public GameObject levelBuffUI, chooseWeaponUI, menuPanel;
     public float UIFadeTime = 0.7f;
 
 
@@ -34,11 +34,19 @@ public class GameManager : MonoBehaviour
     {
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
         defaultLayerMask = LayerMask.NameToLayer("Default");
+
+        // Set UI elements
+        SetCoinAmount(0);
+        SetCrossAmount(0);
+
+        menuPanel.SetActive(true);
     }
 
     public void InitLevel()
     {
         // Load level
+        OpenChooseWeaponPanel();
+
         currentLevel = PlayerPrefs.GetInt("level", 0);
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
         
@@ -53,10 +61,6 @@ public class GameManager : MonoBehaviour
         // Set player position and weapon
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
         SetWeapon();
-
-        // Set UI elements
-        SetCoinAmount(0);
-        SetCrossAmount(0);
     }
 
     private void Update()
@@ -100,6 +104,39 @@ public class GameManager : MonoBehaviour
         playerSc.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
         playerSc.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
         player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;        
+    }
+
+    public void OpenChooseWeaponPanel()
+    {
+        player.GetComponent<PlayerController>().SetController(false);
+
+        // Panel fade in
+        chooseWeaponUI.GetComponent<CanvasGroup>().alpha = 0f;
+        chooseWeaponUI.GetComponent<RectTransform>().transform.localPosition = Vector3.up * 250;
+        chooseWeaponUI.SetActive(true);
+        chooseWeaponUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 0f), UIFadeTime, false).SetEase(Ease.OutElastic);
+        chooseWeaponUI.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime / 2);
+    }
+
+    public void WeaponButton(string weaponName)
+    {
+        SetWeaponPref(weaponName);
+        CloseChooseWeaponPanel();
+    }
+    public void CloseChooseWeaponPanel()
+    {
+        player.GetComponent<PlayerController>().SetController(true);
+
+        chooseWeaponUI.GetComponent<CanvasGroup>().alpha = 1f;
+        chooseWeaponUI.GetComponent<RectTransform>().transform.localPosition = Vector3.zero;
+        chooseWeaponUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 250f), UIFadeTime, false).SetEase(Ease.InOutQuint).OnComplete(ChoosePanelFadedOuted);
+        chooseWeaponUI.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime);
+    }
+    public void ChoosePanelFadedOuted()
+    {
+        chooseWeaponUI.SetActive(false);
+        PlayerController playerSc = player.GetComponent<PlayerController>();
+        playerSc.SetController(true);
     }
 
     public Weapon GetWeapon(string weaponName)
