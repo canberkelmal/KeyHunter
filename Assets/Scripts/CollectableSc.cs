@@ -23,6 +23,7 @@ public class CollectableSc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        transform.parent = gameManager.collectablesParent; 
         ThrowObject();
     }
     public void ThrowObject()

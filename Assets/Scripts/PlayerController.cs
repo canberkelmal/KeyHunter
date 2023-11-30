@@ -102,6 +102,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("FinalWall"))
+        {
+            gameManager.ReachToFinalGate();
+        }
+    }
+
     public void SetController(bool cntrl)
     {
         playerController = cntrl;

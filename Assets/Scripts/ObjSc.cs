@@ -17,7 +17,7 @@ public class ObjSc : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && !isAttacked)
-        {
+        { 
             Attacked();
         }
     }
@@ -39,7 +39,7 @@ public class ObjSc : MonoBehaviour
 
     public void DropObject()
     {
-        GameObject obj = Random.Range(0, 2) > 0 ? gameManager.collectables[0] : gameManager.collectables[1];
+        GameObject obj = Random.Range(0, 2) > 0 ? gameManager.collectables[0] : gameManager.collectables[2];
 
         Instantiate(obj, transform.position, Quaternion.identity);
     }

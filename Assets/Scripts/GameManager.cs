@@ -9,7 +9,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public GameObject player;
-    public Transform levelsParent;
+    public PlayerController playerController;
+    public Transform levelsParent, collectablesParent;
     public LayerMask attackableLayerMask, defaultLayerMask, blockAttackLayerMask, deathLayerMask;
     public Material attackedMat;
     public List<Weapon> weapons;
@@ -39,11 +40,12 @@ public class GameManager : MonoBehaviour
         SetCoinAmount(0);
         SetCrossAmount(0);
 
-        menuPanel.SetActive(true);
+        playerController.SetController(false);
+        menuPanel.SetActive(true); 
     }
 
     public void InitLevel()
-    {
+    { 
         // Load level
         OpenChooseWeaponPanel();
 
@@ -85,10 +87,8 @@ public class GameManager : MonoBehaviour
 
     public void SetWeapon()
     {
-        PlayerController playerSc = player.GetComponent<PlayerController>();
-
         // Remove current weapon from player
-        foreach (Transform currentWeapon in playerSc.weaponPoint.transform)
+        foreach (Transform currentWeapon in playerController.weaponPoint.transform)
         {
             Destroy(currentWeapon.gameObject);
         }
@@ -97,18 +97,18 @@ public class GameManager : MonoBehaviour
         selectedWeapon = GetWeapon(PlayerPrefs.GetString("WeaponName", "Blade"));
 
         // Set the desired weapon
-        GameObject weaponObject = Instantiate(selectedWeapon.prefab, playerSc.weaponPoint.transform);
-        playerSc.attackRange = selectedWeapon.range;
-        playerSc.rangeCircleImage.transform.localScale = Vector3.one * playerSc.attackRange;
-        playerSc.isRanged = selectedWeapon.ranged;
-        playerSc.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
-        playerSc.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
+        GameObject weaponObject = Instantiate(selectedWeapon.prefab, playerController.weaponPoint.transform);
+        playerController.attackRange = selectedWeapon.range;
+        playerController.rangeCircleImage.transform.localScale = Vector3.one * playerController.attackRange;
+        playerController.isRanged = selectedWeapon.ranged;
+        playerController.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
+        playerController.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
         player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;        
     }
 
     public void OpenChooseWeaponPanel()
     {
-        player.GetComponent<PlayerController>().SetController(false);
+        playerController.SetController(false);
 
         // Panel fade in
         chooseWeaponUI.GetComponent<CanvasGroup>().alpha = 0f;
@@ -125,18 +125,17 @@ public class GameManager : MonoBehaviour
     }
     public void CloseChooseWeaponPanel()
     {
-        player.GetComponent<PlayerController>().SetController(true);
+        playerController.SetController(true);
 
         chooseWeaponUI.GetComponent<CanvasGroup>().alpha = 1f;
         chooseWeaponUI.GetComponent<RectTransform>().transform.localPosition = Vector3.zero;
-        chooseWeaponUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 250f), UIFadeTime, false).SetEase(Ease.InOutQuint).OnComplete(ChoosePanelFadedOuted);
+        chooseWeaponUI.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, 250f), UIFadeTime, false).SetEase(Ease.InOutQuint).OnComplete(ChooseWeaponPanelFadedOuted);
         chooseWeaponUI.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime);
     }
-    public void ChoosePanelFadedOuted()
+    public void ChooseWeaponPanelFadedOuted()
     {
         chooseWeaponUI.SetActive(false);
-        PlayerController playerSc = player.GetComponent<PlayerController>();
-        playerSc.SetController(true);
+        playerController.SetController(true);
     }
 
     public Weapon GetWeapon(string weaponName)
@@ -172,8 +171,7 @@ public class GameManager : MonoBehaviour
         buffUI1 = buff1;
         buffUI2 = buff2;
 
-        PlayerController playerSc = player.GetComponent<PlayerController>();
-        playerSc.SetController(false);
+        playerController.SetController(false);
 
         levelBuffUI.transform.Find("Buff1").Find("UISprite").GetComponent<Image>().sprite = buff1.uISprite;
         levelBuffUI.transform.Find("Buff1").Find("Title").GetComponent<Text>().text = buff1.buffName;
@@ -211,8 +209,27 @@ public class GameManager : MonoBehaviour
     public void BuffPanelFadedOuted()
     {
         levelBuffUI.SetActive(false);
-        PlayerController playerSc = player.GetComponent<PlayerController>();
-        playerSc.SetController(true);
+        playerController.SetController(true);
+    }
+
+    public void ReachToFinalGate()
+    {
+        playerController.SetController(false);
+
+        menuPanel.GetComponent<CanvasGroup>().alpha = 0f;
+        menuPanel.SetActive(true);
+        menuPanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime / 2).OnComplete(ClearCollectables);
+    }
+
+    public void ClearCollectables()
+    {
+        levelBuffUI.SetActive(false);
+        chooseWeaponUI.SetActive(false);
+
+        foreach (Transform t in collectablesParent)
+        {
+            Destroy(t.gameObject);
+        }
     }
 
      
@@ -238,6 +255,14 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("level", currentLevel);
             PlayerPrefs.SetInt("levelStage", currentStage);
         }
+    }
+
+    public void ResetLevelAndStage()
+    {
+        currentLevel = 0;
+        currentStage = 0;
+        PlayerPrefs.SetInt("level", currentLevel);
+        PlayerPrefs.SetInt("levelStage", currentStage);
     }
 
     public void ClearLevelBuffs()

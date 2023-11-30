@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class MenuScript : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class MenuScript : MonoBehaviour
         charButton.transform.Find("Selected").gameObject.SetActive(true);
         mapButton.transform.Find("Selected").gameObject.SetActive(false);
         weaponButton.transform.Find("Selected").gameObject.SetActive(false);
-
+         
         charPanel.SetActive(true);
         mapPanel.SetActive(false);
         weaponPanel.SetActive(false);
@@ -61,8 +62,8 @@ public class MenuScript : MonoBehaviour
         Instantiate(gameManager.levels[currentLevel].bgPrefab, mapPanel.transform.Find("Bg"));
 
         // Set button conditions
-        mapPanel.transform.Find("PreBt").GetComponent<Button>().interactable = currentLevel > 0 ? true : false;
-        mapPanel.transform.Find("NextBt").GetComponent<Button>().interactable = currentLevel < gameManager.levels.Length - 2 ? true : false;
+        //mapPanel.transform.Find("PreBt").GetComponent<Button>().interactable = currentLevel > 0 ? true : false;
+        //mapPanel.transform.Find("NextBt").GetComponent<Button>().interactable = currentLevel < gameManager.levels.Length - 2 ? true : false;
     }
     public void PreLvlButton()
     {
@@ -88,14 +89,18 @@ public class MenuScript : MonoBehaviour
     public void StartButton()
     {
         gameManager.InitLevel();
+        gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+        gameObject.GetComponent<CanvasGroup>().DOFade(0, gameManager.UIFadeTime / 2).OnComplete(CloseMenuPanel);        
+    }
+
+    public void CloseMenuPanel()
+    {
         gameObject.SetActive(false);
     }
 
 
     public void OpenWeaponPanel()
     {
-
-
         charButton.transform.localScale = Vector3.one;
         mapButton.transform.localScale = Vector3.one;
         weaponButton.transform.localScale = Vector3.one * 1.3f;
