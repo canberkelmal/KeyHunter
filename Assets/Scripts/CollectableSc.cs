@@ -10,12 +10,13 @@ public class CollectableSc : MonoBehaviour
     {
         coin,
         buff,
-        cross
+        cross,
+        key
     }
 
     public CollectableTypes type;
     public int amount = 1;
-    public Buff buff1, buff2;
+    public Buff buff1, buff2, buff3;
     
     GameManager gameManager;
     
@@ -23,13 +24,15 @@ public class CollectableSc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        transform.parent = gameManager.collectablesParent; 
         ThrowObject();
     }
     public void ThrowObject()
     {
-        Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
-        targetPosition.y = gameManager.dropHeight; 
+        float radius = 0.7f;
+        Vector3 randomCircle = Random.insideUnitCircle * radius;
+
+        Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
+        //targetPosition.y = gameManager.dropHeight; 
         transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
             .SetEase(Ease.Linear)
             .OnComplete(JumpDone);
@@ -37,7 +40,7 @@ public class CollectableSc : MonoBehaviour
 
     public void JumpDone()
     {
-        gameObject.GetComponents<Collider>()[0].enabled = true;
+        gameObject.GetComponents<Collider>()[0].isTrigger = true;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -59,6 +62,9 @@ public class CollectableSc : MonoBehaviour
                 break;
             case CollectableTypes.buff:
                 gameManager.SetBuff(buff1,buff2);
+                break;
+            case CollectableTypes.key:
+                gameManager.GetKey();
                 break;
         }
         Destroy(gameObject);

@@ -69,6 +69,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwUpForce: 0.007
+  dropObjects:
+  - {fileID: 2634943848372469656, guid: c7b90fb0895f9a0409ba1f1a5ba6513d, type: 3}
+  - {fileID: 2634943848372469656, guid: c7b90fb0895f9a0409ba1f1a5ba6513d, type: 3}
+  - {fileID: 3789114689489782821, guid: 8dd45bb30d1e5784f838ba7a81148e27, type: 3}
 --- !u!1001 &5866759444985252178
 PrefabInstance:
   m_ObjectHideFlags: 0

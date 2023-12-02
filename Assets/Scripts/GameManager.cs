@@ -24,12 +24,15 @@ public class GameManager : MonoBehaviour
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel;
+
+    public Text levelStageText;
     public float UIFadeTime = 0.7f;
 
 
     int currentLevel, currentStage;
     Weapon selectedWeapon;
     Buff buffUI1, buffUI2;
+    GameObject finalGate;
 
     private void Start()
     {
@@ -55,7 +58,10 @@ public class GameManager : MonoBehaviour
 
         currentLevel = PlayerPrefs.GetInt("level", 0);
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
-        
+
+        levelStageText.text = (currentLevel+1).ToString() + "X" + (currentStage+1).ToString();
+        levelStageText.transform.parent.gameObject.SetActive(true);
+
         foreach (Transform clv in levelsParent.transform)
         {
             Destroy(clv.gameObject);
@@ -85,6 +91,21 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SetFinalGate(GameObject gate)
+    {
+        finalGate = gate;
+    }
+
+    public void SetFinalGateStatu(bool statu)
+    {
+        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(statu);
+    }
+
+    public void GetKey()
+    {
+        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(true);
     }
 
     public void SetBaseAttackSpeed()
@@ -230,6 +251,7 @@ public class GameManager : MonoBehaviour
         menuPanel.SetActive(true);
         menuPanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime / 2).OnComplete(ClearCollectables);*/
 
+        levelStageText.transform.parent.gameObject.SetActive(false);
         NextStage();
     }
 

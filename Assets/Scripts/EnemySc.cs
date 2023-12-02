@@ -7,6 +7,7 @@ public class EnemySc : MonoBehaviour
 {
     GameManager gameManager;
     public float throwForce;
+    public GameObject[] dropObjects;
 
     private void Start()
     {
@@ -14,10 +15,10 @@ public class EnemySc : MonoBehaviour
     }
     public void Attacked()
     {
-        GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false; 
          
         transform.GetChild(0).gameObject.SetActive(false);
-        transform.GetChild(1).gameObject.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(true); 
 
         foreach (Transform boxPart in transform.GetChild(1))
         {
@@ -30,6 +31,9 @@ public class EnemySc : MonoBehaviour
 
     public void DropObject()
     {
-        Instantiate(gameManager.collectables[0], transform.position, Quaternion.identity);
+        foreach (GameObject dropObj in dropObjects)
+        {
+            Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent);
+        }
     }
 }

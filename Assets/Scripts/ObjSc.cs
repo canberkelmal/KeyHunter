@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CollectableSc;
 
 public class ObjSc : MonoBehaviour
 {
@@ -8,11 +9,19 @@ public class ObjSc : MonoBehaviour
 
     GameManager gameManager;
     public float throwUpForce = 1;
+    public GameObject[] dropObjects;
 
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        foreach (GameObject obj in dropObjects)
+        {
+            if(obj.GetComponent<CollectableSc>().type == CollectableTypes.key)
+            {
+                gameManager.SetFinalGateStatu(false);
+            }
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -39,8 +48,9 @@ public class ObjSc : MonoBehaviour
 
     public void DropObject()
     {
-        GameObject obj = Random.Range(0, 2) > 0 ? gameManager.collectables[0] : gameManager.collectables[2];
-
-        Instantiate(obj, transform.position, Quaternion.identity);
+        foreach(GameObject dropObj in dropObjects)
+        {
+            Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent);
+        }
     }
 }
