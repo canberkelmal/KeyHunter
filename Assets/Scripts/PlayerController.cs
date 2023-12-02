@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     public Transform weaponPoint;
     public GameObject bullet;
     public GameObject rangeCircleImage;
+    public HealthBarSc healthBar;
+    public float maxHealth = 80f;
+    public float currentHealth = 80f;
 
     public bool isRanged = false;
     public float nearAttackRange = 1.5f;
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         attackableLayerMask = gameManager.attackableLayerMask;
         blockAttackLayerMask = gameManager.blockAttackLayerMask;
+        healthBar.SetFillAmountDirect(1);
     }
     public void FixedUpdate()
     {    
@@ -110,6 +114,28 @@ public class PlayerController : MonoBehaviour
         {
             gameManager.ReachToFinalGate();
         }
+    }
+
+    public void TakeHit(float damage)
+    {
+        currentHealth -= damage;
+        SetHp();
+    }
+
+    public void SetHp()
+    {
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            PlayerDeath();
+        }
+        PlayerPrefs.SetFloat("PlayerHp", currentHealth);
+        healthBar.SetFillAmount(currentHealth / maxHealth, false);
+    }
+
+    public void PlayerDeath()
+    {
+
     }
 
     public void SetController(bool cntrl)

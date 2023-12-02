@@ -3959,26 +3959,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6402853767641428947, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.5885616
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402853767641428947, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.8084524
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402853767641428947, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402853767641428947, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6402853767641428947, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -107.89
-      objectReference: {fileID: 0}
     - target: {fileID: 7436990157185378718, guid: 9a5d1b7a8f5c989409ecc47b7f9d6f59, type: 3}
       propertyPath: m_Name
       value: WoodenChest

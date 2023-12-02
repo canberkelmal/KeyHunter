@@ -28,19 +28,30 @@ public class CollectableSc : MonoBehaviour
     }
     public void ThrowObject()
     {
-        float radius = 0.7f;
-        Vector3 randomCircle = Random.insideUnitCircle * radius;
+        if(type == CollectableTypes.buff)
+        {
+            Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
+            targetPosition.y = gameManager.dropHeight;
+            transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+                .SetEase(Ease.Linear)
+                .OnComplete(JumpDone);
+        }
+        else
+        {
+            float radius = 0.7f;
+            Vector3 randomCircle = Random.insideUnitCircle * radius;
 
-        Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
-        //targetPosition.y = gameManager.dropHeight; 
-        transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-            .SetEase(Ease.Linear)
-            .OnComplete(JumpDone);
+            Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
+            //targetPosition.y = gameManager.dropHeight; 
+            transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+                .SetEase(Ease.Linear)
+                .OnComplete(JumpDone);
+        }
     }
 
     public void JumpDone()
     {
-        gameObject.GetComponents<Collider>()[0].isTrigger = true;
+        gameObject.GetComponents<Collider>()[0].enabled = true;
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -7,22 +7,25 @@ public class HealthBarSc : MonoBehaviour
 {
     public float speed = 1f;
     public float glowSpeed = 3f;
-    public float bouyYLimit = 0.92f;
 
     Image fillAmountUI;
     Image glow;
-    Transform borderBouy;
     float fillAmount = 0f;
     float targetFill = 0f;
     bool repeatingAnim = false;
     bool repeatingGlow = false;
+    Transform camTransform;
     // Start is called before the first frame update
     void Awake()
     {        
         fillAmountUI = transform.Find("Health Bar Fill").GetComponent<Image>();
         glow = transform.Find("Glow").GetComponent<Image>();
+        camTransform = Camera.main.transform;
+    }
 
-        borderBouy = transform.Find("Bouy");
+    private void Update()
+    {
+        transform.LookAt(camTransform.position);
     }
 
     public void SetFillColor(Color clr)
@@ -70,9 +73,8 @@ public class HealthBarSc : MonoBehaviour
 
     void FillBorderAnim()
     {
-        fillAmount = Mathf.MoveTowards(fillAmount, targetFill, speed * Time.fixedDeltaTime);
+        fillAmount = Mathf.MoveTowards(fillAmount, targetFill, speed * Time.deltaTime);
         fillAmountUI.fillAmount = fillAmount;
-        borderBouy.localPosition = Vector3.right * Mathf.Lerp(-bouyYLimit, bouyYLimit, Mathf.InverseLerp(0, 1, fillAmount));
         
 
         if (fillAmount == targetFill)
@@ -85,7 +87,7 @@ public class HealthBarSc : MonoBehaviour
     void FillGlowAnimUp()
     {
         Color glowColor = glow.color;
-        glowColor.a = Mathf.MoveTowards(glowColor.a, 1, glowSpeed * Time.fixedDeltaTime);
+        glowColor.a = Mathf.MoveTowards(glowColor.a, 1, glowSpeed * Time.deltaTime);
         glow.color = glowColor;
 
         if(glowColor.a >=1)
@@ -97,7 +99,7 @@ public class HealthBarSc : MonoBehaviour
     void FillGlowAnimDown()
     {
         Color glowColor = glow.color;
-        glowColor.a = Mathf.MoveTowards(glowColor.a, 0, glowSpeed * Time.fixedDeltaTime);
+        glowColor.a = Mathf.MoveTowards(glowColor.a, 0, glowSpeed * Time.deltaTime);
         glow.color = glowColor;
 
         if (glowColor.a <= 0)

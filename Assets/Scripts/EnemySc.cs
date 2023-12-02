@@ -8,6 +8,9 @@ public class EnemySc : MonoBehaviour
     GameManager gameManager;
     public float throwForce;
     public GameObject[] dropObjects;
+    public HealthBarSc healthBar;
+    public float currentHealth = 30f;
+    public float maxHealth = 30f;
 
     private void Start()
     {
@@ -27,6 +30,26 @@ public class EnemySc : MonoBehaviour
         }
         DropObject();
         Destroy(gameObject, 2f);
+    }
+    public void TakeHit(float damage)
+    {
+        currentHealth -= damage;
+        SetHp();
+    }
+
+    public void SetHp()
+    {
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            EnemyDeath();
+        }
+        healthBar.SetFillAmount(currentHealth / maxHealth, false);
+    }
+
+    public void EnemyDeath()
+    {
+
     }
 
     public void DropObject()

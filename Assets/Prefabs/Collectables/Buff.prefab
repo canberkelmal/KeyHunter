@@ -101,9 +101,9 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
@@ -123,6 +123,7 @@ MonoBehaviour:
   amount: 1
   buff1: {fileID: 11400000, guid: 46ae270e1b2460747a3c86c2f358f5af, type: 2}
   buff2: {fileID: 11400000, guid: 3c937b08da5f7c34f8fa34d0544713f0, type: 2}
+  buff3: {fileID: 0}
 --- !u!1001 &5759479953423041387
 PrefabInstance:
   m_ObjectHideFlags: 0
