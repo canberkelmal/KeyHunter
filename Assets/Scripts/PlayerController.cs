@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     public GameObject attackingObject;
 
+    public Weapon currentWeapon;
+
 
     LayerMask attackableLayerMask, blockAttackLayerMask;
     GameManager gameManager;
@@ -114,7 +116,25 @@ public class PlayerController : MonoBehaviour
     {
         playerController = cntrl;
     }
+    public void SetWeapon(Weapon setWeapon)
+    {
+        Weapon selectedWeapon = setWeapon;
 
+        // Set the desired weapon
+        currentWeapon = selectedWeapon;
+        GameObject weaponObject = Instantiate(selectedWeapon.prefab, weaponPoint.transform);
+        attackRange = selectedWeapon.range;
+        rangeCircleImage.transform.localScale = Vector3.one * attackRange;
+        isRanged = selectedWeapon.ranged;
+        bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
+        SetAttackSpeed();
+        transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;
+    }
+
+    public void SetAttackSpeed()
+    {
+        attackSpeed = gameManager.baseAttackSpeed * currentWeapon.weaponSpeed;
+    }
 
 
     // Check for any attackable around

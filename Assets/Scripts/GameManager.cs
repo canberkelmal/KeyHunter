@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public float dropHeight = 0.5f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
-    public GameObject levelBuffUI, chooseWeaponUI, menuPanel;
+    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel;
     public float UIFadeTime = 0.7f;
 
 
@@ -45,7 +45,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void InitLevel()
-    { 
+    {
+        stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
+        stageFadePanel.SetActive(true);
+        stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
+
         // Load level
         OpenChooseWeaponPanel();
 
@@ -64,6 +68,10 @@ public class GameManager : MonoBehaviour
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
         SetWeapon();
     }
+    void StageLoaded()
+    {
+        stageFadePanel.SetActive(false);
+    }
 
     private void Update()
     {
@@ -77,6 +85,11 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SetBaseAttackSpeed()
+    {
+
     }
 
     public void SetWeaponPref(string weaponName)
@@ -96,14 +109,7 @@ public class GameManager : MonoBehaviour
         // Find the desired weapon
         selectedWeapon = GetWeapon(PlayerPrefs.GetString("WeaponName", "Blade"));
 
-        // Set the desired weapon
-        GameObject weaponObject = Instantiate(selectedWeapon.prefab, playerController.weaponPoint.transform);
-        playerController.attackRange = selectedWeapon.range;
-        playerController.rangeCircleImage.transform.localScale = Vector3.one * playerController.attackRange;
-        playerController.isRanged = selectedWeapon.ranged;
-        playerController.bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
-        playerController.attackSpeed = baseAttackSpeed * selectedWeapon.weaponSpeed;
-        player.transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;        
+        playerController.SetWeapon(selectedWeapon);
     }
 
     public void OpenChooseWeaponPanel()
@@ -216,16 +222,19 @@ public class GameManager : MonoBehaviour
     {
         playerController.SetController(false);
 
-        menuPanel.GetComponent<CanvasGroup>().alpha = 0f;
+        levelBuffUI.SetActive(false);
+        chooseWeaponUI.SetActive(false);
+
+        ClearCollectables();
+        /*menuPanel.GetComponent<CanvasGroup>().alpha = 0f;
         menuPanel.SetActive(true);
-        menuPanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime / 2).OnComplete(ClearCollectables);
+        menuPanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime / 2).OnComplete(ClearCollectables);*/
+
+        NextStage();
     }
 
     public void ClearCollectables()
     {
-        levelBuffUI.SetActive(false);
-        chooseWeaponUI.SetActive(false);
-
         foreach (Transform t in collectablesParent)
         {
             Destroy(t.gameObject);
@@ -255,7 +264,12 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("level", currentLevel);
             PlayerPrefs.SetInt("levelStage", currentStage);
         }
+        stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
+        stageFadePanel.SetActive(true);
+        stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(InitLevel);
     }
+
+
 
     public void ResetLevelAndStage()
     {
@@ -263,6 +277,7 @@ public class GameManager : MonoBehaviour
         currentStage = 0;
         PlayerPrefs.SetInt("level", currentLevel);
         PlayerPrefs.SetInt("levelStage", currentStage);
+        InitLevel();
     }
 
     public void ClearLevelBuffs()

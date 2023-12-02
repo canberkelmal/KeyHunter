@@ -18,5 +18,5 @@ MonoBehaviour:
   animator: {fileID: 9100000, guid: 7043160fd8209e44099fc7e78c6241de, type: 2}
   icon: {fileID: 0}
   ranged: 0
-  range: 3
+  range: 2
   weaponSpeed: 2
