@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
             PlayerDeath();
         }
         PlayerPrefs.SetFloat("PlayerHp", currentHealth);
-        healthBar.SetFillAmount(currentHealth / maxHealth, false);
+        healthBar.SetFillAmount(currentHealth / maxHealth, true);
     }
 
     public void PlayerDeath()
