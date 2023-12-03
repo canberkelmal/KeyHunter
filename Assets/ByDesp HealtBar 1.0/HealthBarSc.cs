@@ -41,7 +41,7 @@ public class HealthBarSc : MonoBehaviour
 
     public void SetFillAmount(float amount, bool glowAnim)
     {
-        Debug.Log("SettingBorder to :" + amount);
+        //Debug.Log("SettingBorder to :" + amount);
         targetFill = amount;
 
 
