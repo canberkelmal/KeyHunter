@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class HealthBarSc : MonoBehaviour
 {
     public float speed = 1f;
     public float glowSpeed = 3f;
+    public float showTime = 2f;
+    public float fadeTime = 0.5f;
 
     Image fillAmountUI;
     Image glow;
@@ -21,11 +24,25 @@ public class HealthBarSc : MonoBehaviour
         fillAmountUI = transform.Find("Health Bar Fill").GetComponent<Image>();
         glow = transform.Find("Glow").GetComponent<Image>();
         camTransform = Camera.main.transform;
+        Invoke("BarFadeOut", showTime);
     }
 
     private void Update()
     {
         transform.LookAt(camTransform.position);
+    }
+
+    public void BarFadeIn()
+    {
+        GetComponent<CanvasGroup>().alpha = 0f;
+        GetComponent<CanvasGroup>().DOFade(1, fadeTime);
+        Invoke("BarFadeOut", fadeTime + showTime);
+    }
+
+    public void BarFadeOut()
+    {
+        GetComponent<CanvasGroup>().alpha = 1f;
+        GetComponent<CanvasGroup>().DOFade(0, fadeTime);
     }
 
     public void SetFillColor(Color clr)
@@ -43,6 +60,7 @@ public class HealthBarSc : MonoBehaviour
     {
         //Debug.Log("SettingBorder to :" + amount);
         targetFill = amount;
+        BarFadeIn();
 
 
         if (!repeatingAnim)
