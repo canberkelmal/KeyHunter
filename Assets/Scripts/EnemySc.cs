@@ -16,20 +16,9 @@ public class EnemySc : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
     }
-    public void Attacked()
+    public void Attacked(float damage)
     {
-        GetComponent<CapsuleCollider>().enabled = false; 
-         
-        transform.GetChild(0).gameObject.SetActive(false);
-        transform.GetChild(1).gameObject.SetActive(true); 
-
-        foreach (Transform boxPart in transform.GetChild(1))
-        {
-            Vector3 throwVec = (gameManager.player.transform.position - boxPart.position).normalized * throwForce;
-            boxPart.GetComponent<Rigidbody>().AddForce(throwVec, ForceMode.Impulse);
-        }
-        DropObject();
-        Destroy(gameObject, 2f);
+        
     }
     public void TakeHit(float damage)
     {
@@ -49,7 +38,18 @@ public class EnemySc : MonoBehaviour
 
     public void EnemyDeath()
     {
+        GetComponent<CapsuleCollider>().enabled = false;
 
+        transform.GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(true);
+
+        foreach (Transform boxPart in transform.GetChild(1))
+        {
+            Vector3 throwVec = (gameManager.player.transform.position - boxPart.position).normalized * throwForce;
+            boxPart.GetComponent<Rigidbody>().AddForce(throwVec, ForceMode.Impulse);
+        }
+        DropObject();
+        Destroy(gameObject, 2f);
     }
 
     public void DropObject()

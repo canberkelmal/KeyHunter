@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isRanged = false;
     public float nearAttackRange = 1.5f;
+    public float damage = 0;
     public float attackRange = 1.5f;
     // Delta t between attacks
     public float attackSpeed = 1f;
@@ -133,7 +134,7 @@ public class PlayerController : MonoBehaviour
         healthBar.SetFillAmount(currentHealth / maxHealth, true);
     }
 
-    public void PlayerDeath()
+    public void PlayerDeath() 
     {
 
     }
@@ -149,17 +150,27 @@ public class PlayerController : MonoBehaviour
         // Set the desired weapon
         currentWeapon = selectedWeapon;
         GameObject weaponObject = Instantiate(selectedWeapon.prefab, weaponPoint.transform);
-        attackRange = selectedWeapon.range;
+        attackRange = selectedWeapon.Range();
         rangeCircleImage.transform.localScale = Vector3.one * attackRange;
         isRanged = selectedWeapon.ranged;
-        bullet = selectedWeapon.bullet != null ? selectedWeapon.bullet : null;
+        if(selectedWeapon.bullet != null)
+        {
+            bullet = selectedWeapon.bullet;
+            bullet.GetComponent<BulletSc>().damage = selectedWeapon.Damage();
+        }
+        SetDamage();
         SetAttackSpeed();
         transform.GetChild(0).GetComponent<Animator>().runtimeAnimatorController = selectedWeapon.animator;
     }
 
     public void SetAttackSpeed()
     {
-        attackSpeed = gameManager.baseAttackSpeed * currentWeapon.weaponSpeed;
+        attackSpeed = gameManager.baseAttackSpeed * currentWeapon.AttackSpeed();
+    }
+
+    public void SetDamage()
+    {
+        damage = gameManager.baseDamageMultiplier * currentWeapon.Damage();
     }
 
 
@@ -248,16 +259,16 @@ public class PlayerController : MonoBehaviour
             attackingObject.layer = gameManager.defaultLayerMask;
             Vector3 spawnPoint = weaponPoint.position - Vector3.up / 2;
             GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
-            throwedBullet.GetComponent<BulletSc>().Init(attackingObject.transform);
+            throwedBullet.GetComponent<BulletSc>().Init(attackingObject.transform, damage);
         }
     }
 
     public void HitToEnemy()
     {
-        attackingObject.layer = gameManager.deathLayerMask;
+        //attackingObject.layer = gameManager.deathLayerMask;
         if (attackingObject.GetComponent<EnemySc>())
         {
-            attackingObject.GetComponent<EnemySc>().Attacked();
+            attackingObject.GetComponent<EnemySc>().TakeHit(damage);
         }
         AttackAnimFinished();
     }

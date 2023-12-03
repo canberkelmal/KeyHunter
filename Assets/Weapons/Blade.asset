@@ -20,3 +20,9 @@ MonoBehaviour:
   ranged: 0
   range: 2
   weaponSpeed: 2
+  maxDamage: 30
+  minDamage: 15
+  maxRange: 4
+  minRange: 2
+  maxAttackSpeed: 0.5
+  minAttackSpeed: 1

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public List<Buff> buffs;
     public List<GameObject> collectables;
     public float baseAttackSpeed = 1f;
+    public float baseDamageMultiplier = 1f;
     public Text coinText, crossText;
     public int coinAmount = 0;
     public int crossAmount = 0;
@@ -261,9 +262,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-    }
-
-     
+    }     
      
     public void NextStage()
     {
@@ -290,8 +289,6 @@ public class GameManager : MonoBehaviour
         stageFadePanel.SetActive(true);
         stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(InitLevel);
     }
-
-
 
     public void ResetLevelAndStage()
     {

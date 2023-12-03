@@ -7,6 +7,7 @@ public class BulletSc : MonoBehaviour
     public float speed = 1f;
     public bool throwed = false;
     public Transform target;
+    public float damage = 8f;
 
     // Update is called once per frame
     void Update()
@@ -21,17 +22,18 @@ public class BulletSc : MonoBehaviour
         }
     }
 
-    public void Init(Transform targetObj)
+    public void Init(Transform targetObj, float damage)
     {
         target = targetObj;
         throwed = true;
+        this.damage = damage;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            other.gameObject.GetComponent<EnemySc>().Attacked();
+            other.gameObject.GetComponent<EnemySc>().TakeHit(damage);
             Destroy(gameObject);
         }
     }
