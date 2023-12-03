@@ -30,7 +30,7 @@ public class Weapon : ScriptableObject
     }
     public float AttackSpeed()
     {
-        float damage = minAttackSpeed + PlayerPrefs.GetInt("weaponName" + "Level", 0) * ((maxAttackSpeed - minAttackSpeed) / 10);
+        float damage = minAttackSpeed - PlayerPrefs.GetInt("weaponName" + "Level", 0) * ((maxAttackSpeed - minAttackSpeed) / 10);
         return damage;
     }
     public float Range()
@@ -39,7 +39,7 @@ public class Weapon : ScriptableObject
         return damage;
     }
 
-    public void IncreaseLevel()
+    public void Upgrade()
     {
         int currentLevel = PlayerPrefs.GetInt("weaponName" + "Level", 0);
         PlayerPrefs.SetInt("weaponName" + "Level", currentLevel + 1);

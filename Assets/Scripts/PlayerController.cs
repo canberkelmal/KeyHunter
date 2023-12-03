@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     // Delta t between attacks
     public float attackSpeed = 1f;
     public bool isAttacking = false;
-    public bool attackAnim = false;
+    //public bool attackAnim = false;
 
 
     public GameObject attackingObject;
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     GameManager gameManager;
     bool isMoving = false;
     bool playerController = true;
+    float attackTimer = 0f;
 
     private void Start()
     {
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour
             // Rotation
             if (!CheckAround())
             {
+                attackTimer = 0f;
                 Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 rb.MoveRotation(targetRotation);
             }
@@ -64,11 +66,12 @@ public class PlayerController : MonoBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(new Vector3(attackingObject.transform.position.x, rb.transform.position.y, attackingObject.transform.position.z) - rb.transform.position, Vector3.up);
                 rb.MoveRotation(Quaternion.Euler(0, targetRotation.eulerAngles.y, 0));
-                if (!attackAnim)
+                AttackToNearest();
+                /*if (!attackAnim)
                 {
                     attackAnim = true;
                     AttackToNearest();
-                }
+                }*/
             }
 
             // Movement
@@ -165,7 +168,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetAttackSpeed()
     {
-        attackSpeed = gameManager.baseAttackSpeed * currentWeapon.AttackSpeed();
+        attackSpeed = gameManager.baseAttackSpeedMultiplier * currentWeapon.AttackSpeed();
     }
 
     public void SetDamage()
@@ -211,21 +214,28 @@ public class PlayerController : MonoBehaviour
         }
         return isAttacking;
     }
+
     public void AttackToNearest()
     {
-        // For development process
-        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
-        transform.GetChild(0).GetComponent<Animator>().speed = attackSpeed;
-
-        if (!isRanged)
+        attackTimer -= Time.deltaTime;
+        if(attackTimer <= 0)
         {
-            weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = true;
-        }
+            attackTimer = attackSpeed;
+            
+            // For development process
+            transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+            transform.GetChild(0).GetComponent<Animator>().speed = currentWeapon.minAttackSpeed/attackSpeed;
+
+            if (!isRanged)
+            {
+                weaponPoint.GetChild(0).GetChild(0).GetComponent<TrailRenderer>().emitting = true;
+            }
+        }        
     }
 
     public void AttackAnimFinished()
     {
-        attackAnim = false; 
+        //attackAnim = false; 
 
         transform.GetChild(0).GetComponent<Animator>().speed = 1;
 
@@ -256,7 +266,6 @@ public class PlayerController : MonoBehaviour
     {
         if(attackingObject != null)
         {
-            attackingObject.layer = gameManager.defaultLayerMask;
             Vector3 spawnPoint = weaponPoint.position - Vector3.up / 2;
             GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
             throwedBullet.GetComponent<BulletSc>().Init(attackingObject.transform, damage);
@@ -265,7 +274,6 @@ public class PlayerController : MonoBehaviour
 
     public void HitToEnemy()
     {
-        //attackingObject.layer = gameManager.deathLayerMask;
         if (attackingObject.GetComponent<EnemySc>())
         {
             attackingObject.GetComponent<EnemySc>().TakeHit(damage);

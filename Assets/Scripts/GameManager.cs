@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public List<Weapon> weapons;
     public List<Buff> buffs;
     public List<GameObject> collectables;
-    public float baseAttackSpeed = 1f;
+    public float baseAttackSpeedMultiplier = 1f;
     public float baseDamageMultiplier = 1f;
     public Text coinText, crossText;
     public int coinAmount = 0;

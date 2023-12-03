@@ -15,6 +15,7 @@ public class EnemySc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        healthBar.SetFillAmountDirect(1);
     }
     public void Attacked(float damage)
     {
@@ -38,6 +39,7 @@ public class EnemySc : MonoBehaviour
 
     public void EnemyDeath()
     {
+        gameObject.layer = gameManager.defaultLayerMask;
         GetComponent<CapsuleCollider>().enabled = false;
 
         transform.GetChild(0).gameObject.SetActive(false);
