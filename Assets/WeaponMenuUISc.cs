@@ -19,6 +19,9 @@ public class WeaponMenuUISc : MonoBehaviour
 
     public void ButtonPressed()
     {
-        transform.parent.parent.parent.GetComponent<MenuScript>().OpenWeaponUpgradePanel(buttonWeapon);
+        if(buttonWeapon != null)
+        {
+            transform.parent.parent.parent.GetComponent<MenuScript>().OpenWeaponUpgradePanel(buttonWeapon);
+        }
     }
 }
