@@ -12,9 +12,7 @@ public class MenuScript : MonoBehaviour
 
     GameManager gameManager;
     Weapon upgradingWeapon;
-    float minDamage = 0;
     float maxDamage = 0;
-    float minRange = 0;
     float maxRange = 0;
     float minSpeed = 9999999;
     float maxSpeed = 0;
@@ -149,7 +147,7 @@ public class MenuScript : MonoBehaviour
             {
                 minSpeed = wp.minAttackSpeed;
             }
-        }
+        } 
     }
      
     public void OpenWeaponUpgradePanel(Weapon UIWeapon)
@@ -179,10 +177,8 @@ public class MenuScript : MonoBehaviour
         upgradingPanel.Find("DamageBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(upgradingWeapon.Damage() / maxDamage, upgradingWeapon.NextDamage() / maxDamage, false);
         upgradingPanel.Find("RangeBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(upgradingWeapon.Range() / maxRange, upgradingWeapon.NextRange() / maxRange, false);
         
-        float normalizedS = Mathf.Clamp01((upgradingWeapon.AttackSpeed() - minSpeed) / (maxSpeed - minSpeed));
-        float amoS = normalizedS * (1 - Mathf.Clamp01((upgradingWeapon.AttackSpeed() - minSpeed) / (maxSpeed - minSpeed)));
-        float normalizedSF = Mathf.Clamp01((upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed));
-        float amoSF = normalizedSF * (1 - Mathf.Clamp01((upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed)));
+        float amoS = 1 - (upgradingWeapon.AttackSpeed() - minSpeed) / (maxSpeed - minSpeed);
+        float amoSF = 1 - (upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed);
 
         upgradingPanel.Find("AttackSpeedBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(amoS, amoSF, false);
         weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel ? true : false;
