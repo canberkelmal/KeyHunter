@@ -61,7 +61,8 @@ public class GameManager : MonoBehaviour
         currentLevel = PlayerPrefs.GetInt("level", 0);
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
 
-        levelStageText.text = (currentLevel+1).ToString() + "X" + (currentStage+1).ToString();
+        levelStageText.transform.parent.Find("LevelTx").GetComponent<Text>().text = "Level " + (currentLevel+1).ToString();
+        levelStageText.text = (currentStage + 1).ToString() + "/" + (levels[currentLevel].stageCount).ToString();
         levelStageText.transform.parent.gameObject.SetActive(true);
 
         foreach (Transform clv in levelsParent.transform)

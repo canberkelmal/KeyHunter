@@ -15,6 +15,8 @@ public class WeaponMenuUISc : MonoBehaviour
     public void SetUI()
     {
         transform.Find("WeaponUI").GetComponent<Image>().sprite = buttonWeapon.icon;
+        transform.Find("TitleTx").GetComponent<Text>().text = buttonWeapon.weaponName;
+        transform.Find("LvTx").GetComponent<Text>().text = buttonWeapon.GetLevel() + "/10";
     }
 
     public void ButtonPressed()
