@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public float baseAttackSpeedMultiplier = 1f;
     public float baseDamageMultiplier = 1f;
     public Text coinText, crossText;
+    public int weaponMaxLevel = 10;
     public int coinAmount = 0;
     public int crossAmount = 0;
     public float dropHeight = 0.5f;
@@ -297,6 +298,14 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("level", currentLevel);
         PlayerPrefs.SetInt("levelStage", currentStage);
         InitLevel();
+    }
+
+    public void ResetWeaponUpgrades()
+    {
+        foreach(Weapon wp in weapons)
+        {
+            wp.ResetLevel();
+        }
     }
 
     public void ClearLevelBuffs()

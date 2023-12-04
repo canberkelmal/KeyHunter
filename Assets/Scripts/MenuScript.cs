@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class MenuScript : MonoBehaviour
 {
-    public GameObject mapPanel, charPanel, weaponPanel;
+    public GameObject mapPanel, charPanel, weaponPanel, weaponUpgradingPanel;
     public GameObject mapButton, charButton, weaponButton;
 
     GameManager gameManager;
+    Weapon upgradingWeapon;
+    float minDamage = 0;
+    float maxDamage = 0;
+    float minRange = 0;
+    float maxRange = 0;
+    float minSpeed = 9999999;
+    float maxSpeed = 0;
 
     private void Start()
     {
@@ -31,6 +39,7 @@ public class MenuScript : MonoBehaviour
         charPanel.SetActive(true);
         mapPanel.SetActive(false);
         weaponPanel.SetActive(false);
+        weaponUpgradingPanel.SetActive(false);
     }
     public void OpenMapPanel()
     {
@@ -47,6 +56,7 @@ public class MenuScript : MonoBehaviour
         charPanel.SetActive(false);
         mapPanel.SetActive(true);
         weaponPanel.SetActive(false);
+        weaponUpgradingPanel.SetActive(false);
     }
     public void LoadLevelUI()
     {
@@ -109,8 +119,82 @@ public class MenuScript : MonoBehaviour
         mapButton.transform.Find("Selected").gameObject.SetActive(false);
         weaponButton.transform.Find("Selected").gameObject.SetActive(true);
 
+        int limit = weaponPanel.transform.Find("Weapons").childCount > gameManager.weapons.Count ? gameManager.weapons.Count : weaponPanel.transform.Find("Weapons").childCount;
+
+        for(int i = 0; i < limit; i++)
+        {
+            weaponPanel.transform.Find("Weapons").GetChild(i).GetComponent<WeaponMenuUISc>().SetWeapon(gameManager.weapons[i]);
+        }
+
         charPanel.SetActive(false);
         mapPanel.SetActive(false);
         weaponPanel.SetActive(true);
+        weaponUpgradingPanel.SetActive(false);
+
+        foreach(Weapon wp in gameManager.weapons)
+        {
+            if(wp.maxDamage > maxDamage)
+            {
+                maxDamage = wp.maxDamage;
+            }
+            if(wp.maxRange > maxRange)
+            {
+                maxRange = wp.maxRange;
+            }
+            if(wp.maxAttackSpeed > maxSpeed)
+            {
+                maxSpeed = wp.maxAttackSpeed;
+            }
+            if(wp.minAttackSpeed < minSpeed)
+            {
+                minSpeed = wp.minAttackSpeed;
+            }
+        }
+    }
+     
+    public void OpenWeaponUpgradePanel(Weapon UIWeapon)
+    {
+        upgradingWeapon = UIWeapon;
+        SetWeaponUpgradePanelUI();
+
+        weaponUpgradingPanel.transform.Find("DamageBar").Find("LoadBar").Find("RedFill").GetComponent<Image>().fillAmount = (maxDamage - upgradingWeapon.maxDamage) / maxDamage;
+        weaponUpgradingPanel.transform.Find("RangeBar").Find("LoadBar").Find("RedFill").GetComponent<Image>().fillAmount =  (maxRange - upgradingWeapon.maxRange) / maxRange;
+        weaponUpgradingPanel.transform.Find("AttackSpeedBar").Find("LoadBar").Find("RedFill").GetComponent<Image>().fillAmount = (upgradingWeapon.minAttackSpeed - minSpeed) / (maxSpeed-minSpeed);
+
+        weaponUpgradingPanel.SetActive(true);
+    }
+
+    public void SetWeaponUpgradePanelUI()
+    {
+        Transform panelBg = weaponUpgradingPanel.transform.Find("PanelBg");
+
+        panelBg.Find("Title").GetComponent<Text>().text = upgradingWeapon.weaponName;
+        panelBg.Find("WeaponUI").GetComponent<Image>().sprite = upgradingWeapon.icon;
+
+        SetWeaponUpgradePanelBars();
+    }
+    public void SetWeaponUpgradePanelBars()
+    {
+        Transform upgradingPanel = weaponUpgradingPanel.transform;
+        upgradingPanel.Find("DamageBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(upgradingWeapon.Damage() / maxDamage, upgradingWeapon.NextDamage() / maxDamage, false);
+        upgradingPanel.Find("RangeBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(upgradingWeapon.Range() / maxRange, upgradingWeapon.NextRange() / maxRange, false);
+        
+        float normalizedS = Mathf.Clamp01((upgradingWeapon.AttackSpeed() - minSpeed) / (maxSpeed - minSpeed));
+        float amoS = normalizedS * (1 - Mathf.Clamp01((upgradingWeapon.AttackSpeed() - minSpeed) / (maxSpeed - minSpeed)));
+        float normalizedSF = Mathf.Clamp01((upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed));
+        float amoSF = normalizedSF * (1 - Mathf.Clamp01((upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed)));
+
+        upgradingPanel.Find("AttackSpeedBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(amoS, amoSF, false);
+        weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel ? true : false;
+    }
+    public void WeaponUpgradeButton()
+    {
+        upgradingWeapon.Upgrade();
+
+        SetWeaponUpgradePanelBars();
+    }
+    public void CloseWeaponUpgradePanel()
+    {
+        weaponUpgradingPanel.SetActive(false);
     }
 }

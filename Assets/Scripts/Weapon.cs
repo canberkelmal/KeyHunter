@@ -22,31 +22,50 @@ public class Weapon : ScriptableObject
     public float maxDamage, minDamage;
     public float maxRange, minRange;
     public float maxAttackSpeed, minAttackSpeed;
-
+    public int GetLevel()
+    {
+        int lv = PlayerPrefs.GetInt(weaponName + "Level", 0);
+        return lv;
+    }
     public float Damage()
     {
-        float damage = minDamage + PlayerPrefs.GetInt("weaponName" + "Level", 0) * ((maxDamage-minDamage)/10);
+        float damage = minDamage + PlayerPrefs.GetInt(weaponName + "Level", 0) * ((maxDamage-minDamage)/10);
+        return damage;
+    }
+    public float NextDamage()
+    {
+        float damage = minDamage + (PlayerPrefs.GetInt(weaponName + "Level", 0) + 1) * ((maxDamage - minDamage) / 10);
         return damage;
     }
     public float AttackSpeed()
     {
-        float damage = minAttackSpeed - PlayerPrefs.GetInt("weaponName" + "Level", 0) * ((maxAttackSpeed - minAttackSpeed) / 10);
+        float damage = maxAttackSpeed - PlayerPrefs.GetInt(weaponName + "Level", 0) * ((maxAttackSpeed - minAttackSpeed) / 10);
+        return damage;
+    }
+    public float NextAttackSpeed()
+    {
+        float damage = maxAttackSpeed - (PlayerPrefs.GetInt(weaponName + "Level", 0)+1) * ((maxAttackSpeed - minAttackSpeed) / 10);
         return damage;
     }
     public float Range()
     {
-        float damage = minRange + PlayerPrefs.GetInt("weaponName" + "Level", 0) * ((maxRange - minRange) / 10);
+        float damage = minRange + PlayerPrefs.GetInt(weaponName + "Level", 0) * ((maxRange - minRange) / 10);
+        return damage;
+    }
+    public float NextRange()
+    {
+        float damage = minRange + (PlayerPrefs.GetInt(weaponName + "Level", 0)+1) * ((maxRange - minRange) / 10);
         return damage;
     }
 
     public void Upgrade()
     {
-        int currentLevel = PlayerPrefs.GetInt("weaponName" + "Level", 0);
-        PlayerPrefs.SetInt("weaponName" + "Level", currentLevel + 1);
+        int currentLevel = PlayerPrefs.GetInt(weaponName + "Level", 0);
+        PlayerPrefs.SetInt(weaponName + "Level", currentLevel + 1);
     }
 
     public void ResetLevel()
     {
-        PlayerPrefs.SetInt("weaponName" + "Level", 0);
+        PlayerPrefs.SetInt(weaponName + "Level", 0);
     }
 }
