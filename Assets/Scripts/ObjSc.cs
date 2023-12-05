@@ -19,7 +19,7 @@ public class ObjSc : MonoBehaviour
         {
             if(obj.GetComponent<CollectableSc>().type == CollectableTypes.key)
             {
-                gameManager.SetFinalGateStatu(false);
+                gameManager.SetKeyLevel(true);
             }
         }
     }

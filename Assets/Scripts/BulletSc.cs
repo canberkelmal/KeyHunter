@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +11,20 @@ public class BulletSc : MonoBehaviour
     public float damage = 8f;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (throwed)
         {
-            if(target == null)
+            if(target.gameObject.GetComponent<CapsuleCollider>().enabled == false)
             {
                 Destroy(gameObject);
             }
-            transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+            }
         }
-    }
+    } 
 
     public void Init(Transform targetObj, float damage)
     {

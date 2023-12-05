@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public float dropHeight = 0.5f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
+    public GameObject coinUIPrefab, crossUIPrefab;
     public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel;
 
     public Text levelStageText;
@@ -35,8 +36,9 @@ public class GameManager : MonoBehaviour
     Weapon selectedWeapon;
     Buff buffUI1, buffUI2;
     GameObject finalGate;
-    int enemyCount = 0;
+    public int enemyCount = 0;
     bool hasKey = false;
+    bool isKeyLevel = false;
 
     private void Start()
     {
@@ -53,6 +55,8 @@ public class GameManager : MonoBehaviour
 
     public void InitLevel()
     {
+        hasKey = false;
+        isKeyLevel = false;
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
         stageFadePanel.SetActive(true);
         stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
@@ -103,17 +107,19 @@ public class GameManager : MonoBehaviour
     public void SetFinalGate(GameObject gate)
     {
         finalGate = gate;
+        CheckForFinalGate();
     }
 
-    public void SetFinalGateStatu(bool statu)
+    public void SetKeyLevel(bool isKeyed)
     {
-        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(statu, statu);
+        isKeyLevel = isKeyed;
+        CheckForFinalGate();
     }
 
     public void GetKey()
     {
         hasKey = true;
-        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(hasKey, enemyCount<=0);
+        CheckForFinalGate();
     }
 
     public void EnemyDeath()
@@ -121,9 +127,22 @@ public class GameManager : MonoBehaviour
         enemyCount--;
         if (enemyCount <= 0)
         {
-            finalGate.GetComponent<FinalGateScript>().SetGateAvailable(hasKey, true);
+            CheckForFinalGate();
             AllEnemiesDeath();
         }
+    }
+
+    public void CheckForFinalGate()
+    {
+        bool keyStatu = true;
+        if(isKeyLevel && !hasKey)
+        {
+            keyStatu = false;
+        }
+
+        bool enemyStatu = enemyCount <= 0 ? true : false;
+
+        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(keyStatu, enemyStatu);
     }
 
     public void AllEnemiesDeath()

@@ -47,14 +47,20 @@ public class CollectableSc : MonoBehaviour
                 .OnComplete(JumpDone);
         }
         else
-        {
-            float radius = 0.7f;
-            Vector3 randomCircle = Random.insideUnitCircle * radius;
+        { 
+            if(gameManager.enemyCount > 0)
+            {
+                float radius = 0.7f;
+                Vector3 randomCircle = Random.insideUnitCircle * radius;
 
-            Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
-            //targetPosition.y = gameManager.dropHeight; 
-            transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-                .SetEase(Ease.Linear);
+                Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
+                transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+                    .SetEase(Ease.Linear);
+            }
+            else
+            {
+                MoveToPlayer(gameManager.player.transform);
+            }
         }
     }
     public void MoveToPlayer(Transform playerTransform)
@@ -80,10 +86,10 @@ public class CollectableSc : MonoBehaviour
         switch (type)
         {
             case CollectableTypes.coin:
-                gameManager.SetCoinAmount(amount);
+                CreateUIObject();
                 break;
             case CollectableTypes.cross:
-                gameManager.SetCrossAmount(amount);
+                CreateUIObject();
                 break;
             case CollectableTypes.buff:
                 gameManager.SetBuff(buff1,buff2);
@@ -93,5 +99,19 @@ public class CollectableSc : MonoBehaviour
                 break;
         }
         Destroy(gameObject);
+    }
+
+    void CreateUIObject()
+    {
+        Vector3 cupScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        switch (type)
+        {
+            case CollectableTypes.coin:
+                Instantiate(gameManager.coinUIPrefab, cupScreenPos, Quaternion.identity, gameManager.coinText.transform.parent.Find("Icon"));
+                break;
+            case CollectableTypes.cross:
+                Instantiate(gameManager.crossUIPrefab, cupScreenPos, Quaternion.identity, gameManager.crossText.transform.parent.Find("Icon"));
+                break;
+        }
     }
 }

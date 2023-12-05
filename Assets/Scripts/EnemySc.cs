@@ -12,6 +12,7 @@ public class EnemySc : MonoBehaviour
     public float currentHealth = 30f;
     public float maxHealth = 30f;
 
+
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
