@@ -17,23 +17,34 @@ public class HealthBarSc : MonoBehaviour
     float targetFill = 0f;
     bool repeatingAnim = false;
     bool repeatingGlow = false;
-    Transform camTransform;
+    Transform camTransform, playerHealthBar;
+    bool healthBarShowing = false;
+    
     // Start is called before the first frame update
     void Awake()
     {        
         fillAmountUI = transform.Find("Health Bar Fill").GetComponent<Image>();
         glow = transform.Find("Glow").GetComponent<Image>();
         camTransform = Camera.main.transform;
+        playerHealthBar = GameObject.Find("Player").transform.Find("Canvas").Find("HealthBarCanvas");
         Invoke("BarFadeOut", showTime);
     }
 
     private void Update()
     {
-        transform.LookAt(camTransform.position);
+        if (transform.parent.parent.CompareTag("Player"))
+        {
+            transform.LookAt(camTransform.position);
+        }
+        else
+        {
+            transform.rotation = playerHealthBar.rotation;
+        }
     }
 
     public void BarFadeIn()
     {
+        healthBarShowing = true;
         GetComponent<CanvasGroup>().alpha = 0f;
         GetComponent<CanvasGroup>().DOFade(1, fadeTime);
         Invoke("BarFadeOut", fadeTime + showTime);
@@ -41,6 +52,7 @@ public class HealthBarSc : MonoBehaviour
 
     public void BarFadeOut()
     {
+        healthBarShowing = false;
         GetComponent<CanvasGroup>().alpha = 1f;
         GetComponent<CanvasGroup>().DOFade(0, fadeTime);
     }
@@ -60,7 +72,10 @@ public class HealthBarSc : MonoBehaviour
     {
         //Debug.Log("SettingBorder to :" + amount);
         targetFill = amount;
-        BarFadeIn();
+        if (!healthBarShowing)
+        {
+            BarFadeIn();
+        }
 
 
         if (!repeatingAnim)

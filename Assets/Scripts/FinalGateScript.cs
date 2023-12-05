@@ -14,12 +14,14 @@ public class FinalGateScript : MonoBehaviour
         gameManager.SetFinalGate(gameObject);
     }
 
-    public void SetGateAvailable(bool available)
+
+
+    public void SetGateAvailable(bool keyStatu, bool enemyStatu)
     {
-        isDoorAvailable = available;
+        isDoorAvailable = keyStatu && enemyStatu;
 
         GetComponent<BoxCollider>().isTrigger = isDoorAvailable;
         particle.SetActive(isDoorAvailable);
-        lockObj.SetActive(!isDoorAvailable);
+        lockObj.SetActive(!keyStatu);
     }
 }

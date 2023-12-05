@@ -14,17 +14,27 @@ public class CollectableSc : MonoBehaviour
         key
     }
 
+    public float moveSpeed = 1f;
     public CollectableTypes type;
     public int amount = 1;
     public Buff buff1, buff2, buff3;
     
     GameManager gameManager;
-    
+    bool moveToPlayer = false;
+    Transform movingTarget;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
         ThrowObject();
+    }
+
+    private void FixedUpdate()
+    {
+        if(moveToPlayer && type != CollectableTypes.buff)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, movingTarget.position, moveSpeed*Time.deltaTime);
+        }
     }
     public void ThrowObject()
     {
@@ -44,11 +54,15 @@ public class CollectableSc : MonoBehaviour
             Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
             //targetPosition.y = gameManager.dropHeight; 
             transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-                .SetEase(Ease.Linear)
-                .OnComplete(JumpDone);
+                .SetEase(Ease.Linear);
         }
     }
-
+    public void MoveToPlayer(Transform playerTransform)
+    {
+        JumpDone();
+        movingTarget = playerTransform;
+        moveToPlayer = true;
+    }
     public void JumpDone()
     {
         gameObject.GetComponents<Collider>()[0].enabled = true;

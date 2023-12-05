@@ -52,6 +52,7 @@ public class EnemySc : MonoBehaviour
         }
         DropObject();
         Destroy(gameObject, 2f);
+        gameManager.EnemyDeath();
     }
 
     public void DropObject()

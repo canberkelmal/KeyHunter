@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     Weapon selectedWeapon;
     Buff buffUI1, buffUI2;
     GameObject finalGate;
+    int enemyCount = 0;
+    bool hasKey = false;
 
     private void Start()
     {
@@ -75,6 +77,8 @@ public class GameManager : MonoBehaviour
 
         // Set player position and weapon
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
+        hasKey = false;
+        enemyCount = spawnedLevel.transform.Find("Enemies").childCount;
         SetWeapon();
     }
     void StageLoaded()
@@ -103,12 +107,31 @@ public class GameManager : MonoBehaviour
 
     public void SetFinalGateStatu(bool statu)
     {
-        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(statu);
+        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(statu, statu);
     }
 
     public void GetKey()
     {
-        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(true);
+        hasKey = true;
+        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(hasKey, enemyCount<=0);
+    }
+
+    public void EnemyDeath()
+    {
+        enemyCount--;
+        if (enemyCount <= 0)
+        {
+            finalGate.GetComponent<FinalGateScript>().SetGateAvailable(hasKey, true);
+            AllEnemiesDeath();
+        }
+    }
+
+    public void AllEnemiesDeath()
+    {
+        foreach (Transform collectable in collectablesParent)
+        {
+            collectable.GetComponent<CollectableSc>().MoveToPlayer(player.transform);
+        }
     }
 
     public void SetBaseAttackSpeed()
