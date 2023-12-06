@@ -18,6 +18,7 @@ public class BossSc : MonoBehaviour
     public bool isWalker = false;
     public float attackSpeed = 2f;
     public float fallowingDistance = 1f;
+    public float healthMultiplier = 5f;
 
 
     public List<Vector3> tilePoints;
@@ -33,7 +34,7 @@ public class BossSc : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         gameManager.SetBossLevel();
-        maxHealth = gameManager.playerController.maxHealth;
+        maxHealth = gameManager.playerController.maxHealth * healthMultiplier;
         currentHealth = maxHealth;
         healthBar.SetFillAmountDirect(1);
         foreach (Transform t in transform.Find("Tiles"))
@@ -71,6 +72,10 @@ public class BossSc : MonoBehaviour
                     AttackToPlayer();
                 }
             }
+            else if(isWalker && !isMoving && currentHealth > 0)
+            {
+                transform.LookAt(gameManager.player.transform.position);
+            }
         }
     }
 
@@ -96,6 +101,10 @@ public class BossSc : MonoBehaviour
 
     public void TakeHit(float damage)
     {
+        if(isMoving)
+        {
+            AttackToPlayer();
+        }
         currentHealth -= damage;
         SetHp();
     }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda202786e2c3b042aef6f9e7cc079a6, type: 3}
   m_Name: Heal
   m_EditorClassIdentifier: 
-  buffName: Attack Speed
+  buffName: Heal
   uISprite: {fileID: 21300000, guid: f0b4435e6525252439b3aeed3ff5fe1d, type: 3}
   type: 3

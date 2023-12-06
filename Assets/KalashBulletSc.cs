@@ -9,23 +9,26 @@ public class KalashBulletSc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        transform.LookAt(gameManager.player.transform.position);
-        StartCoroutine(FireMiniBulletsWithDelay(delay));
+        StartCoroutine(FireMiniBulletsWithDelay());
     }
-    private IEnumerator FireMiniBulletsWithDelay(float t)
+    private IEnumerator FireMiniBulletsWithDelay()
     {
-        foreach (Transform miniBullet in transform)
+        while(transform.childCount != 0)
         {
+            Transform miniBullet = transform.GetChild(0);
+            transform.LookAt(gameManager.player.transform.position);
+            miniBullet.parent = null;
             miniBullet.GetComponent<ShotgunMiniBulletSc>().Init();
-            yield return new WaitForSeconds(t);
+            yield return new WaitForSeconds(delay);
         }
+        Destroy(gameObject);
     }
 
     private void FixedUpdate()
     {
-        if (transform.childCount == 0)
+        /*if (transform.childCount == 0)
         {
-            Destroy(gameObject);
-        }
+            Destroy(gameObject, delay);
+        }*/
     }
 }

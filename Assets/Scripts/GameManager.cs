@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     public Text levelStageText;
     public float UIFadeTime = 0.7f;
 
-
+    CameraController camController;
     int currentLevel, currentStage;
     Weapon selectedWeapon;
     Buff buffUI1, buffUI2;
@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        camController = Camera.main.transform.GetComponent<CameraController>();
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
         defaultLayerMask = LayerMask.NameToLayer("Default");
 
@@ -99,6 +100,7 @@ public class GameManager : MonoBehaviour
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
         playerController.isDeath = false;
         playerController.currentHealth = playerController.maxHealth;
+        player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
         playerController.SetHp();
         hasKey = false;
         enemyCount = spawnedLevel.transform.Find("Enemies").childCount;
@@ -119,6 +121,11 @@ public class GameManager : MonoBehaviour
         {
             Restart();
         }
+    }
+
+    public void ShakeCam()
+    {
+        camController.ShakeCam();
     }
 
     public void OpenMenu()
@@ -163,6 +170,7 @@ public class GameManager : MonoBehaviour
 
     public void EnemyDeath()
     {
+        ShakeCam();
         enemyCount--;
         if (enemyCount <= 0)
         {

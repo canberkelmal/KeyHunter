@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     public Weapon currentWeapon;
 
-
+    Transform bulletPoint;
     LayerMask attackableLayerMask, blockAttackLayerMask;
     GameManager gameManager;
     bool isMoving = false;
@@ -150,10 +150,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerDeath() 
+    public void PlayerDeath()
     {
+        gameManager.ShakeCam();
         isDeath = true;
         SetController(false);
+        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Death"); 
         gameManager.failPanel.SetActive(true);
     }
 
@@ -167,7 +169,8 @@ public class PlayerController : MonoBehaviour
 
         // Set the desired weapon
         currentWeapon = selectedWeapon;
-        GameObject weaponObject = Instantiate(selectedWeapon.prefab, weaponPoint.transform);
+        GameObject weaponObject = Instantiate(selectedWeapon.prefab, weaponPoint.transform); //weapon childý oluþturulup, bu satýrdan sonra mermi çýkýþ mekaniði eklenecek
+        bulletPoint = weaponObject.transform.Find("BulletPoint");
         attackRange = selectedWeapon.Range();
         rangeCircleImage.transform.localScale = Vector3.one * attackRange;
         isRanged = selectedWeapon.ranged;
@@ -278,10 +281,10 @@ public class PlayerController : MonoBehaviour
     }*/
 
     public void ThrowABullet()
-    {
+    { 
         if(attackingObject != null)
         {
-            Vector3 spawnPoint = weaponPoint.position - Vector3.up / 2;
+            Vector3 spawnPoint = bulletPoint.position;
             GameObject throwedBullet = Instantiate(bullet, spawnPoint, Quaternion.identity);
             throwedBullet.GetComponent<BulletSc>().Init(attackingObject.transform, damage);
         }
