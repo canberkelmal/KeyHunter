@@ -29,16 +29,21 @@ public class CollectableSc : MonoBehaviour
         ThrowObject();
     }
 
-    private void FixedUpdate()
+    /*private void FixedUpdate()
     {
         if(moveToPlayer && type != CollectableTypes.buff)
         {
             transform.position = Vector3.MoveTowards(transform.position, movingTarget.position, moveSpeed*Time.deltaTime);
         }
-    }
+    }*/
     public void ThrowObject()
     {
-        if(type == CollectableTypes.buff)
+        Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
+        targetPosition.y = gameManager.dropHeight;
+        transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+            .SetEase(Ease.Linear)
+            .OnComplete(JumpDone);
+        /*if (type == CollectableTypes.buff)
         {
             Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
             targetPosition.y = gameManager.dropHeight;
@@ -61,11 +66,11 @@ public class CollectableSc : MonoBehaviour
             {
                 MoveToPlayer(gameManager.player.transform);
             }
-        }
+        }*/
     }
     public void MoveToPlayer(Transform playerTransform)
     {
-        JumpDone();
+        //JumpDone();
         movingTarget = playerTransform;
         moveToPlayer = true;
     }
@@ -86,10 +91,12 @@ public class CollectableSc : MonoBehaviour
         switch (type)
         {
             case CollectableTypes.coin:
-                CreateUIObject();
+                gameManager.SetCoinAmount(1);
+                //CreateUIObject();
                 break;
             case CollectableTypes.cross:
-                CreateUIObject();
+                gameManager.SetCrossAmount(1);
+                //CreateUIObject();
                 break;
             case CollectableTypes.buff:
                 gameManager.SetBuff(buff1,buff2);
