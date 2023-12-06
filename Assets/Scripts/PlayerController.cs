@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     LayerMask attackableLayerMask, blockAttackLayerMask;
     GameManager gameManager;
     bool isMoving = false;
+    public bool isDeath = false;
     bool playerController = true;
     float attackTimer = 0f;
 
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         attackableLayerMask = gameManager.attackableLayerMask;
         blockAttackLayerMask = gameManager.blockAttackLayerMask;
-        healthBar.SetFillAmountDirect(1);
+        //healthBar.SetFillAmountDirect(1);
     }
     public void FixedUpdate()
     {    
@@ -133,21 +134,25 @@ public class PlayerController : MonoBehaviour
 
     public void SetHp()
     {
-        if (currentHealth <= 0)
+        if (!isDeath)
         {
-            currentHealth = 0;
-            PlayerDeath();
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                PlayerDeath();
+            }
+            else if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            PlayerPrefs.SetFloat("PlayerHp", currentHealth);
+            healthBar.SetFillAmount(currentHealth / maxHealth, true);
         }
-        else if(currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-        PlayerPrefs.SetFloat("PlayerHp", currentHealth);
-        healthBar.SetFillAmount(currentHealth / maxHealth, true);
     }
 
     public void PlayerDeath() 
     {
+        isDeath = true;
         SetController(false);
         gameManager.failPanel.SetActive(true);
     }

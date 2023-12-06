@@ -11886,6 +11886,7 @@ MonoBehaviour:
   isAttacking: 0
   attackingObject: {fileID: 0}
   currentWeapon: {fileID: 0}
+  isDeath: 0
 --- !u!54 &1627479788
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13248,11 +13249,11 @@ RectTransform:
   - {fileID: 1741473688}
   - {fileID: 787455544}
   - {fileID: 1222707596}
-  - {fileID: 590809325}
   - {fileID: 1356974500}
   - {fileID: 279692953}
-  - {fileID: 154869369}
   - {fileID: 519220713}
+  - {fileID: 590809325}
+  - {fileID: 154869369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

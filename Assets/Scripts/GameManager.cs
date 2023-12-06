@@ -54,7 +54,11 @@ public class GameManager : MonoBehaviour
         SetCrossAmount(0);
 
         playerController.SetController(false);
-        menuPanel.SetActive(true); 
+        menuPanel.SetActive(true);
+        foreach (Transform clv in levelsParent.transform)
+        {
+            Destroy(clv.gameObject);
+        }
     }
 
     public void InitLevel()
@@ -93,6 +97,9 @@ public class GameManager : MonoBehaviour
 
         // Set player position and weapon
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
+        playerController.isDeath = false;
+        playerController.currentHealth = playerController.maxHealth;
+        playerController.SetHp();
         hasKey = false;
         enemyCount = spawnedLevel.transform.Find("Enemies").childCount;
         SetWeapon();
@@ -118,10 +125,15 @@ public class GameManager : MonoBehaviour
     {
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
         stageFadePanel.SetActive(false);
+        menuPanel.GetComponent<CanvasGroup>().alpha = 1f;
         menuPanel.SetActive(true);
+        foreach (Transform clv in levelsParent.transform)
+        {
+            Destroy(clv.gameObject);
+        }
         failPanel.SetActive(false);
-        CloseBuffPanel();
-        CloseChooseWeaponPanel();
+        levelBuffUI.SetActive(false);
+        chooseWeaponUI.SetActive(false);
     }
 
     
