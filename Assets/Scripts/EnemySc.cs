@@ -26,6 +26,7 @@ public class EnemySc : MonoBehaviour
     public List<Vector3> tilePoints;
     bool isMoving = false;
     bool isWaiting = false;
+    bool isDeath = false;
     int currentTile = 0;
     float attackTimer = 1;
     float waitTimer = 0;
@@ -52,32 +53,35 @@ public class EnemySc : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isWalker && isMoving && currentHealth >0 && !isWaiting)
+        if (!isDeath)
         {
-            transform.position = Vector3.MoveTowards(transform.position, tilePoints[currentTile], speed*Time.deltaTime);
-            if(transform.position == tilePoints[currentTile])
+            if (isWalker && isMoving && currentHealth > 0 && !isWaiting)
             {
-                if(currentTile < tilePoints.Count-1)
+                transform.position = Vector3.MoveTowards(transform.position, tilePoints[currentTile], speed * Time.deltaTime);
+                if (transform.position == tilePoints[currentTile])
                 {
-                    currentTile++;
+                    if (currentTile < tilePoints.Count - 1)
+                    {
+                        currentTile++;
+                    }
+                    else
+                    {
+                        currentTile = 0;
+                    }
+                    WaitOnTile(true);
+                    transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
                 }
-                else
-                {
-                    currentTile = 0;
-                }
-                WaitOnTile(true);
-                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
             }
-        }
 
-        if (isWaiting)
-        {
-            waitTimer -= Time.deltaTime;
-            if(waitTimer <= 0)
+            if (isWaiting)
             {
-                waitTimer = waitDuration;
-                WaitOnTile(false);
-                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                waitTimer -= Time.deltaTime;
+                if (waitTimer <= 0)
+                {
+                    waitTimer = waitDuration;
+                    WaitOnTile(false);
+                    transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                }
             }
         }
     }
@@ -93,39 +97,42 @@ public class EnemySc : MonoBehaviour
 
     public void AttackToPlayer()
     {
-        isWaiting = false;
-        isMoving = false;
-        attackTimer -= Time.deltaTime;
-        if (attackTimer <= 0)
+        if(!isDeath)
         {
-            attackTimer = attackSpeed;
+            isWaiting = false;
+            isMoving = false;
+            attackTimer -= Time.deltaTime;
+            if (attackTimer <= 0)
+            {
+                attackTimer = attackSpeed;
 
-            SpawnThrowObject();
-            transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
-        }
+                SpawnThrowObject();
+                transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+            }
 
-        transform.LookAt(gameManager.player.transform.position);
+            transform.LookAt(gameManager.player.transform.position);
 
-        float currentDistance = Vector3.Distance(transform.position, gameManager.player.transform.position);
+            float currentDistance = Vector3.Distance(transform.position, gameManager.player.transform.position);
 
-        // Eðer mesafe, belirlenen uzaklýktan daha büyükse takip et
-        if (currentDistance > fallowingDistance)
-        {
-            transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
-            // B objesinin pozisyonunu al
-            Vector3 targetPosition = gameManager.player.transform.position;
+            // Eðer mesafe, belirlenen uzaklýktan daha büyükse takip et
+            if (currentDistance > fallowingDistance)
+            {
+                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                // B objesinin pozisyonunu al
+                Vector3 targetPosition = gameManager.player.transform.position;
 
-            // A ve B objeleri arasýndaki mesafeyi belirt
-            Vector3 direction = transform.position - targetPosition;
-            direction.Normalize();
-            Vector3 newPosition = targetPosition + direction * fallowingDistance;
+                // A ve B objeleri arasýndaki mesafeyi belirt
+                Vector3 direction = transform.position - targetPosition;
+                direction.Normalize();
+                Vector3 newPosition = targetPosition + direction * fallowingDistance;
 
-            // A objesinin pozisyonunu güncelle
-            transform.position = Vector3.MoveTowards(transform.position, newPosition, speed * Time.deltaTime);
-        }
-        else
-        {
-            transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                // A objesinin pozisyonunu güncelle
+                transform.position = Vector3.MoveTowards(transform.position, newPosition, speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+            }
         }
     }
 
@@ -155,6 +162,7 @@ public class EnemySc : MonoBehaviour
 
     public void TakeHit(float damage)
     {
+        AttackToPlayer();
         currentHealth -= damage;
         SetHp();
     }
@@ -171,6 +179,8 @@ public class EnemySc : MonoBehaviour
 
     public void EnemyDeath()
     {
+        isDeath = true;
+        transform.Find("PlayerDedector").gameObject.SetActive(false);
         gameObject.layer = gameManager.defaultLayerMask;
         GetComponent<CapsuleCollider>().enabled = false;
 

@@ -26,6 +26,7 @@ public class BossSc : MonoBehaviour
     int currentTile = 0;
     float attackTimer = 1;
     float waitTimer = 0;
+    bool isDeath = false;
     public GameObject throwedObj;
 
     private void Start()
@@ -52,20 +53,23 @@ public class BossSc : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isWalker && isMoving && currentHealth > 0)
+        if(!isDeath)
         {
-            transform.position = Vector3.MoveTowards(transform.position, tilePoints[currentTile], speed * Time.deltaTime);
-            if (transform.position == tilePoints[currentTile])
+            if (isWalker && isMoving && currentHealth > 0)
             {
-                if (currentTile < tilePoints.Count - 1)
+                transform.position = Vector3.MoveTowards(transform.position, tilePoints[currentTile], speed * Time.deltaTime);
+                if (transform.position == tilePoints[currentTile])
                 {
-                    currentTile++;
+                    if (currentTile < tilePoints.Count - 1)
+                    {
+                        currentTile++;
+                    }
+                    else
+                    {
+                        currentTile = 0;
+                    }
+                    AttackToPlayer();
                 }
-                else
-                {
-                    currentTile = 0;
-                }
-                AttackToPlayer();
             }
         }
     }
@@ -108,8 +112,10 @@ public class BossSc : MonoBehaviour
 
     public void EnemyDeath()
     {
+        isDeath = true;
         gameObject.layer = gameManager.defaultLayerMask;
-        //GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Death");
 
         //transform.GetChild(0).gameObject.SetActive(false);
         //transform.GetChild(1).gameObject.SetActive(true);
@@ -120,7 +126,7 @@ public class BossSc : MonoBehaviour
             boxPart.GetComponent<Rigidbody>().AddForce(throwVec, ForceMode.Impulse);
         }*/
         DropObject();
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 2f);
         gameManager.EnemyDeath();
     }
 
