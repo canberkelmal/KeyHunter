@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Heal
   m_EditorClassIdentifier: 
   buffName: Attack Speed
-  uISprite: {fileID: 21300000, guid: 1b8c0359ceadf415b91199b00c78cbb5, type: 3}
+  uISprite: {fileID: 21300000, guid: f0b4435e6525252439b3aeed3ff5fe1d, type: 3}
   type: 3

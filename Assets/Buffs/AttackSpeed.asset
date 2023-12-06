@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: AttackSpeed
   m_EditorClassIdentifier: 
   buffName: Attack Speed
-  uISprite: {fileID: 21300000, guid: 1b8c0359ceadf415b91199b00c78cbb5, type: 3}
+  uISprite: {fileID: 21300000, guid: 6c1eba32c06d5434ebe190c1a1ddfb02, type: 3}
+  type: 0

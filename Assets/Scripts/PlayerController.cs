@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
                 AttackToNearest();
             }*/
         }
-        else if(isMoving)
+        else
         {
             isMoving = false;
             transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
@@ -148,7 +148,8 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerDeath() 
     {
-
+        SetController(false);
+        gameManager.failPanel.SetActive(true);
     }
 
     public void SetController(bool cntrl)

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -28,7 +29,7 @@ public class GameManager : MonoBehaviour
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject coinUIPrefab, crossUIPrefab;
-    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel;
+    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel, failPanel, keyUI;
 
     public Text levelStageText;
     public float UIFadeTime = 0.7f;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
         isBossLevel = false;
         hasKey = false;
         isKeyLevel = false;
+        keyUI.SetActive(false);
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
         stageFadePanel.SetActive(true);
         stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
@@ -112,6 +114,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OpenMenu()
+    {
+        stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
+        stageFadePanel.SetActive(false);
+        menuPanel.SetActive(true);
+        failPanel.SetActive(false);
+        CloseBuffPanel();
+        CloseChooseWeaponPanel();
+    }
+
     
     public void Restart()
     {
@@ -134,6 +146,7 @@ public class GameManager : MonoBehaviour
     {
         hasKey = true;
         CheckForFinalGate();
+        keyUI.SetActive(true);
     }
 
     public void EnemyDeath()
@@ -165,11 +178,6 @@ public class GameManager : MonoBehaviour
         {
             collectable.GetComponent<CollectableSc>().MoveToPlayer(player.transform);
         }
-    }
-
-    public void SetBaseAttackSpeed()
-    {
-
     }
 
     public void SetWeaponPref(string weaponName)
@@ -352,28 +360,28 @@ public class GameManager : MonoBehaviour
      
     public void NextStage()
     {
-        if(levelPrefabs.Length > 0)
-        {
-
-        }
         // If all level stages have not been finished.
-        if (currentStage < levels[currentLevel].stageCount - 2)
+        if (currentStage < levelPrefabs[currentLevel].transform.childCount - 2)
         {
             currentStage++;
             PlayerPrefs.SetInt("levelStage", currentStage);
+            stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
+            stageFadePanel.SetActive(true);
+            stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(InitLevel);
         }
         // Go next level, first stage.
         else
         {
             ClearLevelBuffs();
-            currentLevel++;
+            //currentLevel++;
             currentStage = 0;
             PlayerPrefs.SetInt("level", currentLevel);
             PlayerPrefs.SetInt("levelStage", currentStage);
+            stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
+            stageFadePanel.SetActive(true);
+            stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(OpenMenu);
         }
-        stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
-        stageFadePanel.SetActive(true);
-        stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(InitLevel);
+        PlayerPrefs.SetInt("MaxStage", currentStage);
     }
 
     public void ResetLevelAndStage()
@@ -382,6 +390,7 @@ public class GameManager : MonoBehaviour
         currentStage = 0;
         PlayerPrefs.SetInt("level", currentLevel);
         PlayerPrefs.SetInt("levelStage", currentStage);
+        PlayerPrefs.GetInt("MaxStage", 0);
         InitLevel();
     }
 
@@ -391,6 +400,17 @@ public class GameManager : MonoBehaviour
         {
             wp.ResetLevel();
         }
+    }
+
+    public void ResetBuffs()
+    {
+        PlayerPrefs.SetFloat("AttackSpeedBuff", 1);
+        baseAttackSpeedMultiplier = PlayerPrefs.GetFloat("AttackSpeedBuff", 1);
+        playerController.SetAttackSpeed();
+
+        PlayerPrefs.SetFloat("DamageBuff", 1);
+        baseDamageMultiplier = PlayerPrefs.GetFloat("DamageBuff", 1);
+        playerController.SetDamage();
     }
 
     public void ClearLevelBuffs()

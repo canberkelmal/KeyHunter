@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   buffName: Damage
-  uISprite: {fileID: 21300000, guid: 1b8c0359ceadf415b91199b00c78cbb5, type: 3}
+  uISprite: {fileID: 21300000, guid: 857a82a468d5fe6489eb792226ef8b09, type: 3}
   type: 2
