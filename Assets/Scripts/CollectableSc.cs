@@ -38,12 +38,7 @@ public class CollectableSc : MonoBehaviour
     }*/
     public void ThrowObject()
     {
-        Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
-        targetPosition.y = gameManager.dropHeight;
-        transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-            .SetEase(Ease.Linear)
-            .OnComplete(JumpDone);
-        /*if (type == CollectableTypes.buff)
+        if (type == CollectableTypes.buff)
         {
             Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
             targetPosition.y = gameManager.dropHeight;
@@ -52,28 +47,23 @@ public class CollectableSc : MonoBehaviour
                 .OnComplete(JumpDone);
         }
         else
-        { 
-            if(gameManager.enemyCount > 0)
-            {
-                float radius = 0.7f;
-                Vector3 randomCircle = Random.insideUnitCircle * radius;
+        {
 
-                Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
-                transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-                    .SetEase(Ease.Linear);
-            }
-            else
-            {
-                MoveToPlayer(gameManager.player.transform);
-            }
-        }*/
+            float radius = 0.7f;
+            Vector3 randomCircle = Random.insideUnitCircle * radius;
+
+            Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
+            transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+                .SetEase(Ease.Linear)
+                .OnComplete(JumpDone);
+        }
     }
     public void MoveToPlayer(Transform playerTransform)
     {
         //JumpDone();
         movingTarget = playerTransform;
         moveToPlayer = true;
-    }
+    } 
     public void JumpDone()
     {
         gameObject.GetComponents<Collider>()[0].enabled = true;
@@ -88,14 +78,17 @@ public class CollectableSc : MonoBehaviour
 
     void Collected()
     {
+        bool a = false;
         switch (type)
         {
             case CollectableTypes.coin:
                 gameManager.SetCoinAmount(1);
+                a = true;
                 //CreateUIObject();
                 break;
             case CollectableTypes.cross:
                 gameManager.SetCrossAmount(1);
+                a = true;
                 //CreateUIObject();
                 break;
             case CollectableTypes.buff:
@@ -103,7 +96,13 @@ public class CollectableSc : MonoBehaviour
                 break;
             case CollectableTypes.key:
                 gameManager.GetKey();
+                a = true;
                 break;
+        }
+        if (a)
+        {
+            GameObject takePart = Instantiate(gameManager.takeParticle, transform.position, Quaternion.identity);
+            Destroy(takePart, 2f);
         }
         Destroy(gameObject);
     }

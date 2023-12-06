@@ -23,13 +23,13 @@ public class GameManager : MonoBehaviour
     public Text coinText, crossText;
     public int weaponMaxLevel = 10;
     public int coinAmount = 0;
-    public int crossAmount = 0;
+    public int crossAmount = 0; 
     public float dropHeight = 0.5f;
     public float healBuffAmount = 20f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject coinUIPrefab, crossUIPrefab;
-    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel, failPanel, keyUI;
+    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle;
 
     public Text levelStageText;
     public float UIFadeTime = 0.7f;
