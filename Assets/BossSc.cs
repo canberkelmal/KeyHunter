@@ -31,7 +31,10 @@ public class BossSc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        //healthBar.SetFillAmountDirect(1);
+        gameManager.SetBossLevel();
+        maxHealth = gameManager.playerController.maxHealth;
+        currentHealth = maxHealth;
+        healthBar.SetFillAmountDirect(1);
         foreach (Transform t in transform.Find("Tiles"))
         {
             tilePoints.Add(t.position);
@@ -106,18 +109,18 @@ public class BossSc : MonoBehaviour
     public void EnemyDeath()
     {
         gameObject.layer = gameManager.defaultLayerMask;
-        GetComponent<CapsuleCollider>().enabled = false;
+        //GetComponent<CapsuleCollider>().enabled = false;
 
-        transform.GetChild(0).gameObject.SetActive(false);
-        transform.GetChild(1).gameObject.SetActive(true);
+        //transform.GetChild(0).gameObject.SetActive(false);
+        //transform.GetChild(1).gameObject.SetActive(true);
 
-        foreach (Transform boxPart in transform.GetChild(1))
+        /*foreach (Transform boxPart in transform.GetChild(1))
         {
             Vector3 throwVec = (gameManager.player.transform.position - boxPart.position).normalized * throwForce;
             boxPart.GetComponent<Rigidbody>().AddForce(throwVec, ForceMode.Impulse);
-        }
+        }*/
         DropObject();
-        Destroy(gameObject, 2f);
+        Destroy(gameObject, 0.5f);
         gameManager.EnemyDeath();
     }
 

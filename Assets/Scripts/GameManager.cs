@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public int enemyCount = 0;
     bool hasKey = false;
     bool isKeyLevel = false;
+    bool isBossLevel = false;
 
     private void Start()
     {
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
 
     public void InitLevel()
     {
+        isBossLevel = false;
         hasKey = false;
         isKeyLevel = false;
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
@@ -88,6 +90,10 @@ public class GameManager : MonoBehaviour
     void StageLoaded()
     {
         stageFadePanel.SetActive(false);
+    }
+    public void SetBossLevel()
+    {
+        isBossLevel = true;
     }
 
     private void Update()

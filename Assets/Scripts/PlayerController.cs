@@ -278,6 +278,10 @@ public class PlayerController : MonoBehaviour
         {
             attackingObject.GetComponent<EnemySc>().TakeHit(damage);
         }
+        else if (attackingObject.GetComponent<BossSc>())
+        {
+            attackingObject.GetComponent<BossSc>().TakeHit(damage);
+        }
         AttackAnimFinished();
     }
 

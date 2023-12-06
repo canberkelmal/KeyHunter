@@ -37,7 +37,15 @@ public class BulletSc : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            other.gameObject.GetComponent<EnemySc>().TakeHit(damage);
+            if (other.gameObject.GetComponent<EnemySc>())
+            {
+                other.gameObject.GetComponent<EnemySc>().TakeHit(damage);
+            }
+            else if (other.gameObject.GetComponent<BossSc>())
+            {
+                other.gameObject.GetComponent<BossSc>().TakeHit(damage);
+            }
+            
             Destroy(gameObject);
         }
     }
