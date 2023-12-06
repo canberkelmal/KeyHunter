@@ -374,7 +374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropObjects:
-  - {fileID: 3642570769024145792, guid: 66aab80569e02734191144eefd231d07, type: 3}
+  - {fileID: 3642570769024145792, guid: 368eb85c8dffdc54a92b467aa4afe34b, type: 3}
 --- !u!1 &8440939402114843201
 GameObject:
   m_ObjectHideFlags: 0

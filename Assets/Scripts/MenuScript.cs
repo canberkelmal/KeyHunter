@@ -9,6 +9,8 @@ public class MenuScript : MonoBehaviour
 {
     public GameObject mapPanel, charPanel, weaponPanel, weaponUpgradingPanel;
     public GameObject mapButton, charButton, weaponButton;
+    public int upgCoinCost = 15;
+    public int upgCrossCost = 10;
 
     GameManager gameManager;
     Weapon upgradingWeapon;
@@ -147,7 +149,7 @@ public class MenuScript : MonoBehaviour
             {
                 minSpeed = wp.minAttackSpeed;
             }
-        } 
+        }  
     }
      
     public void OpenWeaponUpgradePanel(Weapon UIWeapon)
@@ -181,11 +183,25 @@ public class MenuScript : MonoBehaviour
         float amoSF = 1 - (upgradingWeapon.NextAttackSpeed() - minSpeed) / (maxSpeed - minSpeed);
 
         upgradingPanel.Find("AttackSpeedBar").Find("LoadBar").GetComponent<LoadBarSc>().SetFillAmount(amoS, amoSF, false);
-        weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel ? true : false;
+        upgradingPanel.Find("LevelTx").GetComponent<Text>().text = "Lv. " + upgradingWeapon.GetLevel().ToString() + "/" + gameManager.weaponMaxLevel.ToString();
+        SetButtonStatu();
+    }
+    public void SetButtonStatu()
+    {
+        if(upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel && gameManager.coinAmount > upgCoinCost && gameManager.crossAmount > upgCrossCost)
+        {
+            weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = false;
+        }
     }
     public void WeaponUpgradeButton()
     {
         upgradingWeapon.Upgrade();
+        gameManager.SetCoinAmount(-upgCoinCost);
+        gameManager.SetCrossAmount(-upgCrossCost);
 
         SetWeaponUpgradePanelBars();
     }

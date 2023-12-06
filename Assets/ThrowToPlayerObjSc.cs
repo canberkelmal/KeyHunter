@@ -36,6 +36,7 @@ public class ThrowToPlayerObjSc : MonoBehaviour
         transform.parent = null;
         transform.LookAt(target.transform.position);
         this.damage = damage;
+        transform.GetChild(0).GetComponent<Rotator>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)

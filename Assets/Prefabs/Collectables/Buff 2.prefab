@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2712815856354192415}
   - component: {fileID: 1608922465802859943}
   m_Layer: 0
-  m_Name: Buff
+  m_Name: Buff 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,9 +122,8 @@ MonoBehaviour:
   moveSpeed: 12
   type: 1
   amount: 1
-  buff1: {fileID: 11400000, guid: 46ae270e1b2460747a3c86c2f358f5af, type: 2}
-  buff2: {fileID: 11400000, guid: 3c937b08da5f7c34f8fa34d0544713f0, type: 2}
-  buff3: {fileID: 0}
+  buff1: {fileID: 11400000, guid: b2d7085367aed354da284ab7e969d84a, type: 2}
+  buff2: {fileID: 11400000, guid: 2597e9950f1c1864da033e8fd322bd70, type: 2}
 --- !u!1001 &5759479953423041387
 PrefabInstance:
   m_ObjectHideFlags: 0

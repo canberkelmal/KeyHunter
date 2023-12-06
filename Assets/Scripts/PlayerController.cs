@@ -125,6 +125,11 @@ public class PlayerController : MonoBehaviour
         currentHealth -= damage;
         SetHp();
     }
+    public void Heal(float heal)
+    {
+        currentHealth += heal;
+        SetHp();
+    }
 
     public void SetHp()
     {
@@ -132,6 +137,10 @@ public class PlayerController : MonoBehaviour
         {
             currentHealth = 0;
             PlayerDeath();
+        }
+        else if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
         }
         PlayerPrefs.SetFloat("PlayerHp", currentHealth);
         healthBar.SetFillAmount(currentHealth / maxHealth, true);

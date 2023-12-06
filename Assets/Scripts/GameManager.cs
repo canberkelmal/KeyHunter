@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Buff;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int coinAmount = 0;
     public int crossAmount = 0;
     public float dropHeight = 0.5f;
+    public float healBuffAmount = 20f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject coinUIPrefab, crossUIPrefab;
@@ -56,6 +58,8 @@ public class GameManager : MonoBehaviour
 
     public void InitLevel()
     {
+        baseAttackSpeedMultiplier = PlayerPrefs.GetFloat("AttackSpeedBuff", 1);
+        baseDamageMultiplier = PlayerPrefs.GetFloat("DamageBuff", 1);
         isBossLevel = false;
         hasKey = false;
         isKeyLevel = false;
@@ -64,10 +68,14 @@ public class GameManager : MonoBehaviour
         stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
 
         // Load level
-        OpenChooseWeaponPanel();
 
         currentLevel = PlayerPrefs.GetInt("level", 0);
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
+
+        if (currentStage == 0)
+            OpenChooseWeaponPanel();
+        else
+            playerController.SetController(true);
 
         levelStageText.transform.parent.Find("LevelTx").GetComponent<Text>().text = "Level " + (currentLevel+1).ToString();
         levelStageText.text = (currentStage + 1).ToString() + "/" + (levels[currentLevel].stageCount).ToString();
@@ -267,13 +275,41 @@ public class GameManager : MonoBehaviour
 
     public void Buff1Button()
     {
-        buffUI1.BuffEffect();
+        //buffUI1.BuffEffect();
+        TakeBuff(buffUI1.type);
         CloseBuffPanel();
     }
     public void Buff2Button()
     {
-        buffUI2.BuffEffect();
+        //buffUI2.BuffEffect();
+        TakeBuff(buffUI2.type);
         CloseBuffPanel();
+    }
+
+    public void TakeBuff(Buff.BuffTypes a)
+    {
+        switch (a)
+        {
+            case BuffTypes.attackSpeed:
+                baseAttackSpeedMultiplier = PlayerPrefs.GetFloat("AttackSpeedBuff", 1) / 1.15f;
+                PlayerPrefs.SetFloat("AttackSpeedBuff", baseAttackSpeedMultiplier);
+                playerController.SetAttackSpeed();
+                break;
+            case BuffTypes.doubleShot:
+
+                break;
+
+            case BuffTypes.damage:
+
+                baseDamageMultiplier = PlayerPrefs.GetFloat("DamageBuff", 1) * 1.15f;
+                PlayerPrefs.SetFloat("DamageBuff", baseDamageMultiplier);
+                playerController.SetDamage();
+
+                break;
+            case BuffTypes.heal:
+                playerController.Heal(healBuffAmount);
+                break;
+        }
     }
 
     public void CloseBuffPanel()

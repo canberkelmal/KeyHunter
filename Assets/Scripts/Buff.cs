@@ -16,6 +16,8 @@ public class Buff : ScriptableObject
     {
         attackSpeed,
         doubleShot,
+        damage,
+        heal,
     }
 
     public BuffTypes type;
@@ -28,6 +30,13 @@ public class Buff : ScriptableObject
 
                 break;
             case BuffTypes.doubleShot:
+
+                break;
+
+            case BuffTypes.damage:
+
+                break;
+            case BuffTypes.heal:
 
                 break;
         }

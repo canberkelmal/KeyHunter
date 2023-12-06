@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bda202786e2c3b042aef6f9e7cc079a6, type: 3}
-  m_Name: DoubleShot
+  m_Name: Heal
   m_EditorClassIdentifier: 
-  buffName: Double Shot
-  uISprite: {fileID: 21300000, guid: a36e9fcda713e4217b03167d94e7c8f1, type: 3}
-  type: 1
+  buffName: Attack Speed
+  uISprite: {fileID: 21300000, guid: 1b8c0359ceadf415b91199b00c78cbb5, type: 3}
+  type: 3

@@ -17,7 +17,7 @@ public class CollectableSc : MonoBehaviour
     public float moveSpeed = 1f;
     public CollectableTypes type;
     public int amount = 1;
-    public Buff buff1, buff2, buff3;
+    public Buff buff1, buff2;
     
     GameManager gameManager;
     bool moveToPlayer = false;
