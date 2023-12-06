@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Movement
-            Vector3 desiredVelocity = attackingObject != null ? direction * speed / 2 : direction * speed;
+            Vector3 desiredVelocity = attackingObject != null ? direction * speed / 1.2f : direction * speed;
             rb.velocity = new Vector3(desiredVelocity.x, rb.velocity.y, desiredVelocity.z);
 
             /*// Rotation
