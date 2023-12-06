@@ -150,7 +150,6 @@ public class EnemySc : MonoBehaviour
 
     public void ThrowObject()
     {
-        throwedObj.transform.parent = null;
         throwedObj.GetComponent<ThrowToPlayerObjSc>().Init(gameManager.player.transform, damage);
     }
 

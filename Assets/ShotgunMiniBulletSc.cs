@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThrowToPlayerObjSc : MonoBehaviour
+public class ShotgunMiniBulletSc : MonoBehaviour
 {
     public float speed = 1f;
     public float lifeTime = 2.5f;
@@ -21,21 +21,17 @@ public class ThrowToPlayerObjSc : MonoBehaviour
         }
 
         lifeTimer += Time.deltaTime;
-         
-        if(lifeTimer >= lifeTime)
+
+        if (lifeTimer >= lifeTime)
         {
             Destroy(gameObject);
         }
     }
 
-    public void Init(Transform targetObj, float damage)
+    public void Init()
     {
         lifeTimer = 0;
-        target = targetObj;
         throwed = true;
-        transform.parent = null;
-        transform.LookAt(target.transform.position);
-        this.damage = damage;
     }
 
     private void OnTriggerEnter(Collider other)
