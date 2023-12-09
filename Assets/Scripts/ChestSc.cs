@@ -51,7 +51,8 @@ public class ChestSc : MonoBehaviour
     {
         foreach (GameObject dropObj in dropObjects)
         {
-            Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent);
+            GameObject droped = Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent);
+            droped.GetComponent<CollectableSc>().ThrowObject(true);
         }
     }
 }

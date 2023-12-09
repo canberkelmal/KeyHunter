@@ -26,7 +26,7 @@ public class CollectableSc : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        ThrowObject();
+        //ThrowObject();
     }
 
     /*private void FixedUpdate()
@@ -36,9 +36,9 @@ public class CollectableSc : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, movingTarget.position, moveSpeed*Time.deltaTime);
         }
     }*/
-    public void ThrowObject()
+    public void ThrowObject(bool toPlayer)
     {
-        if (type == CollectableTypes.buff)
+        if(toPlayer)
         {
             Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
             targetPosition.y = gameManager.dropHeight;
@@ -48,7 +48,6 @@ public class CollectableSc : MonoBehaviour
         }
         else
         {
-
             float radius = 0.7f;
             Vector3 randomCircle = Random.insideUnitCircle * radius;
 
