@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using DG.Tweening.Core.Easing;
+using TMPro;
 
 public class CollectableSc : MonoBehaviour
 {
-    public enum CollectableTypes
+    public enum CollectableTypes 
     {
         coin,
         buff,
@@ -23,7 +24,7 @@ public class CollectableSc : MonoBehaviour
     bool moveToPlayer = false;
     Transform movingTarget;
 
-    private void Start()
+    private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         //ThrowObject();
@@ -38,24 +39,21 @@ public class CollectableSc : MonoBehaviour
     }*/
     public void ThrowObject(bool toPlayer)
     {
-        if(toPlayer)
+        float radius = 0.7f;
+        Vector3 randomCircle = Random.insideUnitCircle * radius;
+
+        Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
+        if (toPlayer)
         {
-            Vector3 targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
+            targetPosition = transform.position + (gameManager.player.transform.position - transform.position).normalized * 2;
             targetPosition.y = gameManager.dropHeight;
             transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
                 .SetEase(Ease.Linear)
                 .OnComplete(JumpDone);
         }
-        else
-        {
-            float radius = 0.7f;
-            Vector3 randomCircle = Random.insideUnitCircle * radius;
-
-            Vector3 targetPosition = new Vector3(transform.position.x + randomCircle.x, gameManager.dropHeight, transform.position.z + randomCircle.y);
-            transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
-                .SetEase(Ease.Linear)
-                .OnComplete(JumpDone);
-        }
+        transform.DOJump(targetPosition, 1.5f, 1, 0.5f)
+            .SetEase(Ease.Linear)
+            .OnComplete(JumpDone);
     }
     public void MoveToPlayer(Transform playerTransform)
     {

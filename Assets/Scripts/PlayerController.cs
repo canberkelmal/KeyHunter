@@ -163,11 +163,10 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerDeath()
     {
-        gameManager.ShakeCam();
         isDeath = true;
         SetController(false);
-        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Death"); 
-        gameManager.failPanel.SetActive(true);
+        transform.GetChild(0).GetComponent<Animator>().SetTrigger("Death");
+        gameManager.PlayerIsDeath();
     }
 
     public void SetController(bool cntrl)

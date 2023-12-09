@@ -98,10 +98,19 @@ public class GameManager : MonoBehaviour
 
         // Set player position and weapon
         player.transform.position = spawnedLevel.transform.Find("PlayerSpawnPoint").position;
-        playerController.isDeath = false;
-        playerController.currentHealth = playerController.maxHealth;
-        player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
-        playerController.SetHp();
+        if(playerController.isDeath)
+        {
+            playerController.isDeath = false;
+            playerController.currentHealth = playerController.maxHealth;
+            playerController.SetHp();
+            player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
+        }
+        else
+        {
+            playerController.currentHealth = PlayerPrefs.GetFloat("PlayerHp", playerController.maxHealth);
+            playerController.SetHp();
+            player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
+        }
         hasKey = false;
         enemyCount = spawnedLevel.transform.Find("Enemies").childCount;
         SetWeapon();
@@ -360,7 +369,7 @@ public class GameManager : MonoBehaviour
 
         levelBuffUI.SetActive(false);
         chooseWeaponUI.SetActive(false);
-
+         
         ClearCollectables();
         /*menuPanel.GetComponent<CanvasGroup>().alpha = 0f;
         menuPanel.SetActive(true);
@@ -402,6 +411,15 @@ public class GameManager : MonoBehaviour
             stageFadePanel.GetComponent<CanvasGroup>().DOFade(1, UIFadeTime).OnComplete(OpenMenu);
         }
         PlayerPrefs.SetInt("MaxStage", currentStage);
+    }
+
+    public void PlayerIsDeath()
+    {
+        failPanel.SetActive(true);
+        currentStage = 0;
+        PlayerPrefs.SetInt("levelStage", currentStage);
+        PlayerPrefs.SetInt("MaxStage", currentStage);
+        ShakeCam();
     }
 
     public void ResetLevelAndStage()

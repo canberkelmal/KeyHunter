@@ -66,7 +66,7 @@ public class MenuScript : MonoBehaviour
 
         // Set stage text
         int currentStage = PlayerPrefs.GetInt("levelStage", 0);
-        mapPanel.transform.Find("StageTx").GetComponent<Text>().text = "STAGE: " + (PlayerPrefs.GetInt("MaxStage", 0) + 1).ToString() + "/" + gameManager.levels[currentLevel].stageCount;
+        mapPanel.transform.Find("StageTx").GetComponent<Text>().text = "STAGE: " + (currentStage + 1).ToString() + "/" + gameManager.levels[currentLevel].stageCount;
 
         // Set UI background
         Instantiate(gameManager.levels[currentLevel].bgPrefab, mapPanel.transform.Find("Bg"));

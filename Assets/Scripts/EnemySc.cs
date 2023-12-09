@@ -101,13 +101,6 @@ public class EnemySc : MonoBehaviour
             isWaiting = false;
             isMoving = false;
             attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0)
-            {
-                attackTimer = attackSpeed;
-
-                SpawnThrowObject();
-                transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
-            }
 
             transform.LookAt(gameManager.player.transform.position);
 
@@ -130,7 +123,14 @@ public class EnemySc : MonoBehaviour
             }
             else
             {
-                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                //transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", true);
+                if (attackTimer <= 0)
+                {
+                    attackTimer = attackSpeed;
+
+                    SpawnThrowObject();
+                    transform.GetChild(0).GetComponent<Animator>().SetTrigger("Attack");
+                }
             }
         }
     }
@@ -164,16 +164,20 @@ public class EnemySc : MonoBehaviour
         AttackToPlayer();
         currentHealth -= damage;
         SetHp();
+        Invoke("StopAttack", 2f);
     }
 
     public void SetHp()
     {
-        if (currentHealth <= 0)
+        if(!isDeath)
         {
-            currentHealth = 0;
-            EnemyDeath();
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                EnemyDeath();
+            }
+            healthBar.SetFillAmount(currentHealth / maxHealth, false);
         }
-        healthBar.SetFillAmount(currentHealth / maxHealth, false);
     }
 
     public void EnemyDeath()
@@ -192,7 +196,6 @@ public class EnemySc : MonoBehaviour
             boxPart.GetComponent<Rigidbody>().AddForce(throwVec, ForceMode.Impulse);
         }
         DropObject();
-        Destroy(gameObject, 2f);
         gameManager.EnemyDeath();
     }
 
@@ -200,8 +203,10 @@ public class EnemySc : MonoBehaviour
     {
         foreach (GameObject dropObj in dropObjects)
         {
-            GameObject droped = Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent);
+            GameObject droped = Instantiate(dropObj, transform.position, Quaternion.identity, gameManager.collectablesParent) as GameObject;
             droped.GetComponent<CollectableSc>().ThrowObject(false);
+            droped = null;
         }
+        Destroy(gameObject, 2f);
     }
 }
