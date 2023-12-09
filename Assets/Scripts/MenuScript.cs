@@ -204,6 +204,13 @@ public class MenuScript : MonoBehaviour
         gameManager.SetCrossAmount(-upgCrossCost);
 
         SetWeaponUpgradePanelBars();
+
+        int limit = weaponPanel.transform.Find("Weapons").childCount > gameManager.weapons.Count ? gameManager.weapons.Count : weaponPanel.transform.Find("Weapons").childCount;
+
+        for (int i = 0; i < limit; i++)
+        {
+            weaponPanel.transform.Find("Weapons").GetChild(i).GetComponent<WeaponMenuUISc>().SetWeapon(gameManager.weapons[i]);
+        }
     }
     public void CloseWeaponUpgradePanel()
     {
