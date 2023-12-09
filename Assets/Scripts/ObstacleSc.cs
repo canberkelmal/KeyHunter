@@ -17,6 +17,7 @@ public class ObstacleSc : MonoBehaviour
 
             if (pushbackForce > 0)
             {
+                controller.HitToObstacle();
                 controller.SetController(false);
                 Invoke("OpenController", 1);
                 Rigidbody playerRigidbody = collision.gameObject.GetComponent<Rigidbody>();

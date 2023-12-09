@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     bool isMoving = false;
     public bool isDeath = false;
     bool playerController = true;
+    bool hitToObs = false;
     float attackTimer = 0f;
 
     private void Start()
@@ -50,7 +51,7 @@ public class PlayerController : MonoBehaviour
     public void FixedUpdate()
     {    
         // Movement and rotation
-        if ((floatingJoystick.Vertical != 0 || floatingJoystick.Horizontal != 0) && playerController)
+        if ((floatingJoystick.Vertical != 0 || floatingJoystick.Horizontal != 0) && playerController && !hitToObs)
         {
             isMoving = true;
             transform.GetChild(0).GetComponent<Animator>().SetBool("Walking",true);
@@ -100,6 +101,16 @@ public class PlayerController : MonoBehaviour
 
                 AttackToNearest();
             }*/
+        }
+        else if (hitToObs)
+        {
+            isMoving = false;
+            transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
+            //rb.velocity = Vector3.zero;
+            if (isAttacking)
+            {
+                isAttacking = false;
+            }
         }
         else
         {
@@ -162,6 +173,15 @@ public class PlayerController : MonoBehaviour
     public void SetController(bool cntrl)
     {
         playerController = cntrl;
+        if (cntrl)
+        {
+            hitToObs = false;
+        }
+    }
+
+    public void HitToObstacle()
+    {
+        hitToObs = true;
     }
     public void SetWeapon(Weapon setWeapon)
     {
