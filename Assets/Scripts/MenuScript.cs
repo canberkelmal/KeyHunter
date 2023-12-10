@@ -69,6 +69,10 @@ public class MenuScript : MonoBehaviour
         mapPanel.transform.Find("StageTx").GetComponent<Text>().text = "STAGE: " + (currentStage + 1).ToString() + "/" + gameManager.levels[currentLevel].stageCount;
 
         // Set UI background
+        foreach(Transform bgSprite in mapPanel.transform.Find("Bg"))
+        {
+            Destroy(bgSprite.gameObject);
+        }
         Instantiate(gameManager.levels[currentLevel].bgPrefab, mapPanel.transform.Find("Bg"));
 
         // Set button conditions

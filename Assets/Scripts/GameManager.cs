@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
         stageFadePanel.SetActive(false);
         menuPanel.GetComponent<CanvasGroup>().alpha = 1f;
         menuPanel.SetActive(true);
+        menuPanel.GetComponent<MenuScript>().OpenMapPanel();
         foreach (Transform clv in levelsParent.transform)
         {
             Destroy(clv.gameObject);
@@ -415,8 +416,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayerIsDeath()
     {
-        failPanel.SetActive(true);
         currentStage = 0;
+        failPanel.SetActive(true);
         PlayerPrefs.SetInt("levelStage", currentStage);
         PlayerPrefs.SetInt("MaxStage", currentStage);
         ShakeCam();
