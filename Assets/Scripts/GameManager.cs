@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject coinUIPrefab, crossUIPrefab;
-    public GameObject levelBuffUI, chooseWeaponUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle;
+    public GameObject levelBuffUI, chooseWeaponUI, continueUI, settingsUI, menuWarningUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle;
 
     public Text levelStageText;
     public float UIFadeTime = 0.7f;
@@ -43,9 +43,12 @@ public class GameManager : MonoBehaviour
     bool hasKey = false;
     bool isKeyLevel = false;
     bool isBossLevel = false;
+    public bool isContinue = false;
 
     private void Start()
     {
+        isContinue = PlayerPrefs.GetInt("Continue", 0) > 0 ? true : false;
+        continueUI.SetActive(isContinue); 
         camController = Camera.main.transform.GetComponent<CameraController>();
         deathLayerMask = LayerMask.NameToLayer("DeathEnemy");
         defaultLayerMask = LayerMask.NameToLayer("Default");
@@ -55,15 +58,47 @@ public class GameManager : MonoBehaviour
         SetCrossAmount(0);
 
         playerController.SetController(false);
+        StageFadeOut();
         menuPanel.SetActive(true);
+        //OpenMenu();
         foreach (Transform clv in levelsParent.transform)
         {
             Destroy(clv.gameObject);
         }
     }
 
+    public void ContinueUI(bool ind)
+    {
+        continueUI.SetActive(false);
+        if(ind)
+        {
+            menuPanel.GetComponent<MenuScript>().StartButton();
+        }
+        else
+        {
+            CloseMenuWarningUI();
+            CloseSettings();
+            PlayerPrefs.SetInt("Continue", 0);
+            PlayerPrefs.SetInt("levelStage", 0);
+            StageFadeOut();
+            ClearLevelValues();
+            Debug.Log("Level values cleared");
+            menuPanel.SetActive(true);
+
+            foreach (Transform clv in levelsParent.transform)
+            {
+                Destroy(clv.gameObject);
+            }
+            menuPanel.GetComponent<CanvasGroup>().alpha = 1f;
+            menuPanel.GetComponent<MenuScript>().Start();
+        }
+    }
+
     public void InitLevel()
     {
+        Time.timeScale = 1f;
+        hasKey = false;
+        PlayerPrefs.SetInt("Continue", 1);
         baseAttackSpeedMultiplier = PlayerPrefs.GetFloat("AttackSpeedBuff", 1);
         baseDamageMultiplier = PlayerPrefs.GetFloat("DamageBuff", 1);
         isBossLevel = false;
@@ -80,7 +115,10 @@ public class GameManager : MonoBehaviour
         currentStage = PlayerPrefs.GetInt("levelStage", 0);
 
         if (currentStage == 0)
+        {
             OpenChooseWeaponPanel();
+            playerController.Heal(playerController.maxHealth);
+        }
         else
             playerController.SetController(true);
 
@@ -101,8 +139,7 @@ public class GameManager : MonoBehaviour
         if(playerController.isDeath)
         {
             playerController.isDeath = false;
-            playerController.currentHealth = playerController.maxHealth;
-            playerController.SetHp();
+            playerController.Heal(playerController.maxHealth);
             player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
         }
         else
@@ -111,9 +148,14 @@ public class GameManager : MonoBehaviour
             playerController.SetHp();
             player.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
         }
-        hasKey = false;
         enemyCount = spawnedLevel.transform.Find("Enemies").childCount;
         SetWeapon();
+    }
+    public void StageFadeOut()
+    {
+        stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
+        stageFadePanel.SetActive(true);
+        stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
     }
     void StageLoaded()
     {
@@ -151,6 +193,8 @@ public class GameManager : MonoBehaviour
         failPanel.SetActive(false);
         levelBuffUI.SetActive(false);
         chooseWeaponUI.SetActive(false);
+
+        ClearLevelValues();
     }
 
     
@@ -402,7 +446,6 @@ public class GameManager : MonoBehaviour
         // Go next level, first stage.
         else
         {
-            ClearLevelBuffs();
             //currentLevel++;
             currentStage = 0;
             PlayerPrefs.SetInt("level", currentLevel);
@@ -439,8 +482,11 @@ public class GameManager : MonoBehaviour
         {
             wp.ResetLevel();
         }
+        stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
+        stageFadePanel.SetActive(true);
+        stageFadePanel.GetComponent<CanvasGroup>().DOFade(0, UIFadeTime).OnComplete(StageLoaded);
     }
-
+     
     public void ResetBuffs()
     {
         PlayerPrefs.SetFloat("AttackSpeedBuff", 1);
@@ -452,8 +498,45 @@ public class GameManager : MonoBehaviour
         playerController.SetDamage();
     }
 
-    public void ClearLevelBuffs()
+    public void ResetCollectables()
     {
+        SetCoinAmount(-coinAmount);
+        SetCrossAmount(-crossAmount);
+    }
 
+    public void ResetAllGame()
+    {
+        playerController.Heal(playerController.maxHealth);
+        ResetCollectables();
+        ResetBuffs();
+        ResetWeaponUpgrades();
+        ResetLevelAndStage();
+    }
+
+    public void OpenSettings()
+    {
+        Time.timeScale = 0f;
+        settingsUI.SetActive(true);
+    }
+
+    public void GoMenu()
+    {
+        menuWarningUI.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        settingsUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void CloseMenuWarningUI()
+    {
+        menuWarningUI.SetActive(false);
+    }
+
+    public void ClearLevelValues()
+    {
+        ResetBuffs();
+        playerController.Heal(playerController.maxHealth);
     }
 }

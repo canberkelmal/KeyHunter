@@ -205,12 +205,26 @@ public class PlayerController : MonoBehaviour
 
     public void SetAttackSpeed()
     {
-        attackSpeed = gameManager.baseAttackSpeedMultiplier * currentWeapon.AttackSpeed();
+        if(currentWeapon != null)
+        {
+            attackSpeed = gameManager.baseAttackSpeedMultiplier * currentWeapon.AttackSpeed();
+        }
+        else
+        {
+            attackSpeed = gameManager.baseAttackSpeedMultiplier;
+        }
     }
 
     public void SetDamage()
     {
-        damage = gameManager.baseDamageMultiplier * currentWeapon.Damage();
+        if (currentWeapon != null)
+        {
+            damage = gameManager.baseDamageMultiplier * currentWeapon.Damage();
+        }
+        else
+        {
+            attackSpeed = gameManager.baseDamageMultiplier;
+        }
     }
 
 

@@ -19,7 +19,7 @@ public class MenuScript : MonoBehaviour
     float minSpeed = 9999999;
     float maxSpeed = 0;
 
-    private void Start()
+    public void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
         OpenMapPanel();
@@ -27,7 +27,6 @@ public class MenuScript : MonoBehaviour
 
     public void OpenCharPanel()
     {
-
         charButton.transform.localScale = Vector3.one * 1.3f;
         mapButton.transform.localScale = Vector3.one;
         weaponButton.transform.localScale = Vector3.one;
