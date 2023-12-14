@@ -29,11 +29,13 @@ public class GameManager : MonoBehaviour
     public Level[] levels;
     public GameObject[] levelPrefabs;
     public GameObject coinUIPrefab, crossUIPrefab;
-    public GameObject levelBuffUI, chooseWeaponUI, continueUI, settingsUI, menuWarningUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle;
+    public GameObject levelBuffUI, lockedTx, chooseWeaponUI, continueUI, settingsUI, menuWarningUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle, getKeyParticle;
+    
 
     public Text levelStageText;
     public float UIFadeTime = 0.7f;
 
+    List<GateSc> gateScs = new List<GateSc>();
     CameraController camController;
     int currentLevel, currentStage;
     Weapon selectedWeapon;
@@ -96,6 +98,7 @@ public class GameManager : MonoBehaviour
 
     public void InitLevel()
     {
+        ResetGates();
         Time.timeScale = 1f;
         hasKey = false;
         PlayerPrefs.SetInt("Continue", 1);
@@ -203,6 +206,22 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void AddToGates(GateSc addedSc)
+    {
+        gateScs.Add(addedSc);
+    }
+
+    public void LockedTx()
+    {
+        //lockedTx.GetComponent<LockedTxSc>().ShowTx();
+        lockedTx.SetActive(true);
+    }
+
+    public void ResetGates()
+    {
+        gateScs = new List<GateSc>();
+    }
+
     public void SetFinalGate(GameObject gate)
     {
         finalGate = gate;
@@ -219,6 +238,13 @@ public class GameManager : MonoBehaviour
     {
         hasKey = true;
         CheckForFinalGate();
+        if(gateScs.Count > 0)
+        {
+            foreach(GateSc g in gateScs)
+            {
+                g.SetGateAvailable(true);
+            }
+        }
         keyUI.SetActive(true);
     }
 

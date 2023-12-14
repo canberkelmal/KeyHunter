@@ -76,6 +76,7 @@ public class CollectableSc : MonoBehaviour
     void Collected()
     {
         bool a = false;
+        bool b = false;
         switch (type)
         {
             case CollectableTypes.coin:
@@ -93,13 +94,19 @@ public class CollectableSc : MonoBehaviour
                 break;
             case CollectableTypes.key:
                 gameManager.GetKey();
-                a = true;
+                b = true;
                 break;
         }
+
         if (a)
         {
             GameObject takePart = Instantiate(gameManager.takeParticle, transform.position, Quaternion.identity);
-            Destroy(takePart, 2f);
+            Destroy(takePart, 1.5f);
+        }
+        if (b)
+        {
+            GameObject takePart = Instantiate(gameManager.getKeyParticle, transform.position, Quaternion.identity);
+            Destroy(takePart, 1.5f);
         }
         Destroy(gameObject);
     }
