@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Blade
   prefab: {fileID: 7166648791074488584, guid: e84878d084e913047a752161100e65cf, type: 3}
   bullet: {fileID: 0}
-  animator: {fileID: 9100000, guid: 7043160fd8209e44099fc7e78c6241de, type: 2}
+  animator: {fileID: 9100000, guid: e73957c1ecc58854988ea221d6d7a685, type: 2}
   icon: {fileID: 21300000, guid: 3488d7644bdab014a849cda9a659cb59, type: 3}
   ranged: 0
   range: 2
@@ -26,3 +26,7 @@ MonoBehaviour:
   minRange: 2
   maxAttackSpeed: 1
   minAttackSpeed: 0.5
+  baseCoinCost: 15
+  baseCrossCost: 15
+  coinCostMultiplierPerLevel: 1.5
+  crossCostMultiplierPerLevel: 1.5

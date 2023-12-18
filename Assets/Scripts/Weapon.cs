@@ -22,6 +22,8 @@ public class Weapon : ScriptableObject
     public float maxDamage, minDamage;
     public float maxRange, minRange;
     public float maxAttackSpeed, minAttackSpeed;
+
+    public float baseCoinCost, baseCrossCost, coinCostMultiplierPerLevel, crossCostMultiplierPerLevel;
     public int GetLevel()
     {
         int lv = PlayerPrefs.GetInt(weaponName + "Level", 0);
@@ -56,6 +58,18 @@ public class Weapon : ScriptableObject
     {
         float damage = minRange + (PlayerPrefs.GetInt(weaponName + "Level", 0)+1) * ((maxRange - minRange) / 10);
         return damage;
+    }
+
+    public float UpgradeCoinCost()
+    {
+        float coinCost = baseCoinCost * coinCostMultiplierPerLevel * (PlayerPrefs.GetInt(weaponName + "Level", 0) + 1);
+        return coinCost;
+    }
+
+    public float UpgradeCrossCost()
+    {
+        float crossCost = baseCrossCost * crossCostMultiplierPerLevel * (PlayerPrefs.GetInt(weaponName + "Level", 0) + 1);
+        return crossCost;
     }
 
     public void Upgrade()

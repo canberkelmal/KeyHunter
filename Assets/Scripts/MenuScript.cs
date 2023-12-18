@@ -9,8 +9,10 @@ public class MenuScript : MonoBehaviour
 {
     public GameObject mapPanel, charPanel, weaponPanel, weaponUpgradingPanel;
     public GameObject mapButton, charButton, weaponButton;
+    public GameObject upgCoinTx, upgCrossTx;
     public int upgCoinCost = 15;
     public int upgCrossCost = 10;
+
 
     GameManager gameManager;
     Weapon upgradingWeapon;
@@ -191,7 +193,11 @@ public class MenuScript : MonoBehaviour
     }
     public void SetButtonStatu()
     {
-        if(upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel && gameManager.coinAmount > upgCoinCost && gameManager.crossAmount > upgCrossCost)
+        upgCoinCost = (int)upgradingWeapon.UpgradeCoinCost();
+        upgCrossCost = (int)upgradingWeapon.UpgradeCrossCost();
+
+        // Set button interactability
+        if (upgradingWeapon.GetLevel() < gameManager.weaponMaxLevel && gameManager.coinAmount >= upgCoinCost && gameManager.crossAmount >= upgCrossCost)
         {
             weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = true;
         }
@@ -199,6 +205,12 @@ public class MenuScript : MonoBehaviour
         {
             weaponUpgradingPanel.transform.Find("UpgradeButton").GetComponent<Button>().interactable = false;
         }
+
+        // Set button text UIs
+        upgCoinTx.GetComponent<Text>().color = gameManager.coinAmount >= upgCoinCost ? Color.white : Color.red;
+        upgCoinTx.GetComponent<Text>().text = upgCoinCost.ToString();
+        upgCrossTx.GetComponent<Text>().color = gameManager.crossAmount >= upgCrossCost ? Color.white : Color.red;
+        upgCrossTx.GetComponent<Text>().text = upgCrossCost.ToString();
     }
     public void WeaponUpgradeButton()
     {
