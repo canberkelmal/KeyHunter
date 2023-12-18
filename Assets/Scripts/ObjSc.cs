@@ -34,7 +34,8 @@ public class ObjSc : MonoBehaviour
     public void Attacked()
     {
         isAttacked = true;
-
+        gameManager.ShakeCamWithPower(0.5f);
+         
         transform.GetChild(0).gameObject.SetActive(false);
         transform.GetChild(1).gameObject.SetActive(true);
 

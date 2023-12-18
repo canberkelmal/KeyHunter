@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
 
     private float startRotationY;
     bool isShaking = false;
+    float tempPower = 0f;
 
     public void SetPlayerOffset()
     {
@@ -30,7 +31,7 @@ public class CameraController : MonoBehaviour
             if (shakeTime > 0)
             {
                 // Z rotasyonunda shake effecti oluþturmak için sine fonksiyonunu kullanarak deðiþimi hesapla
-                float yRotation = Mathf.Sin(Time.time * shakeFreq) * shakePower;
+                float yRotation = Mathf.Sin(Time.time * shakeFreq) * tempPower;
 
                 // Kameranýn Z rotasyonunu belirtilen aralýkta güncelle
                 transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles.x, startRotationY + yRotation, transform.localRotation.eulerAngles.z);
@@ -50,6 +51,15 @@ public class CameraController : MonoBehaviour
     public void ShakeCam()
     {
         shakePower *= -1;
+        tempPower = shakePower;
+        isShaking = true;
+        shakeTime = t;
+    }
+
+    public void ShakeCamWithPower(float powerMultiplier)
+    {
+        shakePower *= -1;
+        tempPower = shakePower * powerMultiplier;
         isShaking = true;
         shakeTime = t;
     }

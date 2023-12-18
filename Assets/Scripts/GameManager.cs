@@ -190,6 +190,11 @@ public class GameManager : MonoBehaviour
         camController.ShakeCam();
     }
 
+    public void ShakeCamWithPower(float power)
+    {
+        camController.ShakeCamWithPower(power);
+    }
+
     public void OpenMenu()
     {
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 0f;
