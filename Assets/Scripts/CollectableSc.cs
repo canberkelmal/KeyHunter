@@ -93,7 +93,9 @@ public class CollectableSc : MonoBehaviour
                 gameManager.SetBuff(buff1,buff2);
                 break;
             case CollectableTypes.key:
+
                 gameManager.GetKey();
+                CreateUIObject();
                 b = true;
                 break;
         }
@@ -121,6 +123,9 @@ public class CollectableSc : MonoBehaviour
                 break;
             case CollectableTypes.cross:
                 Instantiate(gameManager.crossUIPrefab, cupScreenPos, Quaternion.identity, gameManager.crossText.transform.parent.Find("Icon"));
+                break;
+            case CollectableTypes.key:
+                Instantiate(gameManager.keyUIPrefab, cupScreenPos, Quaternion.identity, gameManager.keyUI.transform);
                 break;
         }
     }

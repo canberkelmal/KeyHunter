@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Collectable
   - FinalWall
+  - Gate
+  - Platform
   layers:
   - Default
   - TransparentFX

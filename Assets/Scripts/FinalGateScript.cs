@@ -8,7 +8,7 @@ public class FinalGateScript : MonoBehaviour
     public bool isDoorAvailable = false;
     public GameObject particle, lockObj;
     
-    private void Start()
+    private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         gameManager.SetFinalGate(gameObject);

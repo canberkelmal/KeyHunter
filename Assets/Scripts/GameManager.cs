@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public float healBuffAmount = 20f;
     public Level[] levels;
     public GameObject[] levelPrefabs;
-    public GameObject coinUIPrefab, crossUIPrefab;
+    public GameObject coinUIPrefab, crossUIPrefab, keyUIPrefab;
     public GameObject levelBuffUI, lockedTx, chooseWeaponUI, continueUI, settingsUI, menuWarningUI, menuPanel, stageFadePanel, failPanel, keyUI, takeParticle, getKeyParticle;
     
 
@@ -107,6 +107,14 @@ public class GameManager : MonoBehaviour
         isBossLevel = false;
         hasKey = false;
         isKeyLevel = false;
+        if(keyUI.transform.childCount > 0)
+        {
+            foreach(Transform a in keyUI.transform)
+            {
+                Destroy (a.gameObject);
+            }
+        }
+        keyUI.GetComponent<Image>().color = Color.white;
         keyUI.SetActive(false);
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
         stageFadePanel.SetActive(true);
@@ -247,6 +255,17 @@ public class GameManager : MonoBehaviour
         }
         keyUI.SetActive(true);
     }
+
+    public void LoadPlayerToPlatform(GameObject platform)
+    {
+        playerController.LoadToPlatform(platform);
+    }
+    public void UnloadPlayerFromPlatform()
+    {
+        playerController.UnloadFromPlatform();
+    }
+
+
 
     public void EnemyDeath()
     {

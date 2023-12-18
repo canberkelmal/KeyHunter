@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     bool playerController = true;
     bool hitToObs = false;
     float attackTimer = 0f;
+    bool loadingToPlatform = false;
+    Transform tempParent;
 
     private void Start()
     {
@@ -112,6 +114,16 @@ public class PlayerController : MonoBehaviour
                 isAttacking = false;
             }
         }
+        else if (loadingToPlatform)
+        {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, speed*Time.deltaTime);
+            if(transform.localPosition == Vector3.zero)
+            {
+                transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
+                transform.parent.parent.GetComponent<GateSc>().MoveThePlatform();
+                loadingToPlatform = false;
+            }
+        }
         else
         {
             isMoving = false;
@@ -167,6 +179,19 @@ public class PlayerController : MonoBehaviour
         SetController(false);
         transform.GetChild(0).GetComponent<Animator>().SetTrigger("Death");
         gameManager.PlayerIsDeath();
+    }
+
+    public void LoadToPlatform(GameObject platform)
+    {
+        tempParent = transform.parent != null ? transform.parent : null;
+        transform.parent = platform.transform.Find("PlatformObj");
+        playerController = false;
+        loadingToPlatform = true;
+    }
+    public void UnloadFromPlatform()
+    {
+        transform.parent = tempParent != null ? tempParent : null;
+        playerController = true;
     }
 
     public void SetController(bool cntrl)
