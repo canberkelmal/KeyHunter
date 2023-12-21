@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
             }
         }
         keyUI.GetComponent<Image>().color = Color.white;
+        keyUI.GetComponent<Image>().enabled = false;
         keyUI.SetActive(false);
         stageFadePanel.GetComponent<CanvasGroup>().alpha = 1f;
         stageFadePanel.SetActive(true);
@@ -251,14 +252,20 @@ public class GameManager : MonoBehaviour
     {
         hasKey = true;
         CheckForFinalGate();
-        if(gateScs.Count > 0)
+        //Invoke("OpenGates", 1);
+        OpenGates();
+        keyUI.SetActive(true);
+    }
+
+    public void OpenGates()
+    {
+        if (gateScs.Count > 0)
         {
-            foreach(GateSc g in gateScs)
+            foreach (GateSc g in gateScs)
             {
                 g.SetGateAvailable(true);
             }
         }
-        keyUI.SetActive(true);
     }
 
     public void LoadPlayerToPlatform(GameObject platform)
@@ -293,7 +300,10 @@ public class GameManager : MonoBehaviour
 
         bool enemyStatu = enemyCount <= 0 ? true : false;
 
-        finalGate.GetComponent<FinalGateScript>().SetGateAvailable(keyStatu, enemyStatu);
+        if(finalGate != null)
+        {
+            finalGate.GetComponent<FinalGateScript>().SetGateAvailable(keyStatu, enemyStatu);
+        }
     }
 
     public void AllEnemiesDeath()
@@ -460,6 +470,7 @@ public class GameManager : MonoBehaviour
 
     public void ReachToFinalGate()
     {
+        keyUI.SetActive(false);
         playerController.SetController(false);
 
         levelBuffUI.SetActive(false);

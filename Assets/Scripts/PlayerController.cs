@@ -111,12 +111,13 @@ public class PlayerController : MonoBehaviour
             //rb.velocity = Vector3.zero;
             if (isAttacking)
             {
-                isAttacking = false;
+                isAttacking = false; 
             }
         }
         else if (loadingToPlatform)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, speed*Time.deltaTime);
+            transform.LookAt(transform.parent.position);
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, speed*Time.deltaTime * 1.2f);
             if(transform.localPosition == Vector3.zero)
             {
                 transform.GetChild(0).GetComponent<Animator>().SetBool("Walking", false);
